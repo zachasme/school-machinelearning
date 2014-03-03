@@ -15,15 +15,19 @@ FILL_MEAN = 3 # fill missing with mean
 
 
 
-
+titlestr=''
 # FUNNY CONSTANTS HAHA
 DISCARD     = 5 # discard first DISCARD columns
 INVALID_FIX = ELIM_COMM
 NORMALIZE   = False
 STANDARDIZE = False
+PRENORM     = True
+REMOVE_N = 0
 
+
+filestr = ''
 # read data from comma-separated datafile
-datafile = open('data/communities.data')
+datafile = open('data/communities_norm.data')
 namefile = open('data/communities.names')
 datareader = csv.reader(datafile, delimiter=',', quotechar='|')
 namereader = csv.reader(namefile, delimiter=',', quotechar='|')
@@ -42,16 +46,31 @@ X_mean = X.mean(0)[np.newaxis,:] # every value is the attributes mean
 
 # preprocesses X
 if INVALID_FIX is ELIM_COMM:
-    # removes data objects with missing values
-    X = ma.compress_rows(X)
+	# removes data objects with missing values
+	X = ma.compress_rows(X)
+	titlestr += "Rows with missings removed. "
+	filestr += 'rows-with-missings-removed_'
+
 elif INVALID_FIX is ELIM_ATTR:
-    # removes attributes with missing values
-    X = ma.compress_cols(X)
+	# removes attributes with missing values
+	X = ma.compress_cols(X)
+	titlestr += "Attributes with missings removed. "
+	filestr += 'attr-with-missings-removed_'
 elif INVALID_FIX is FILL_MEAN:
-    # takes mean where masked value otherwise
-    X = np.where(X.mask, X_mean, X)
+	# takes mean where masked value otherwise
+	X = np.where(X.mask, X_mean, X)
+	titlestr += "Missings filled with means. "
+	filestr += "missings-filled-w-means_"
 
 X_mean = X.mean(0)[np.newaxis,:] # recalculate mean
+
+removes = [4,16,7,210,247]
+
+for i in range(REMOVE_N):
+	X = np.delete(X, (removes[i]), axis=0)
+
+titlestr += str(REMOVE_N) + " biggest outliers removed"
+filestr += str(REMOVE_N)+"-biggest-outliers-removed_"
 
 #X = np.delete(X, (119), axis=0) # remove row
 #X = np.delete(X, (4), axis=0) # remove row
@@ -77,15 +96,21 @@ X_mean = X.mean(0)[np.newaxis,:] # recalculate mean
 X_unNorm = np.copy(X);
 X_unNorm_mean = np.copy(X_mean)
 if NORMALIZE:
+    titlestr += 'Normalized. '
+    filestr += 'norm_'
     attributeSums = X.max(axis=1)
     X = X / attributeSums[:, np.newaxis] # normalized
     X_mean = X.mean(0)[np.newaxis,:] # mean along attributes, all valuesa are attr-mean
 
 if STANDARDIZE:
+    titlestr += 'standardized. '
+    filestr += 'standrd_'
     X = (X - X_mean) / std(X)
     X_mean = X.mean(0)[np.newaxis,:] # mean along attributes, all valuesa are attr-mean
 
-
+if PRENORM:
+    titlestr += 'prenormed. '
+    filestr  += 'prenormed_'
 
 
 ## PeeCeeAaa
@@ -108,16 +133,16 @@ i2 = (U[2,:].argmax())
 
 
 
-for i in range(3):
-	for j in range(i,3):
-		figure()
-		scatter(X[:,i], X[:,j])
+#for i in range(M):
+#	for j in range(i+1,M):
+#		figure()
+#		scatter(X[:,i], X[:,j])
 
-		tt = attributeNames[j] + " as a function of " + attributeNames[i]
-		title(tt)
-		xlabel(attributeNames[i])
-		ylabel(attributeNames[j])
-		savefig("correlations/"+attributeNames[j] + "-as-func-of-" + attributeNames[i]+".png")
+#		tt = attributeNames[j] + " as a function of " + attributeNames[i]
+#		title(tt)
+#		xlabel(attributeNames[i])
+#		ylabel(attributeNames[j])
+#		savefig("correlations/"+attributeNames[j] + "-as-func-of-" + attributeNames[i]+".png")
 
 
 
@@ -134,7 +159,7 @@ ax.set_title("Variance as a function of number of PCs")
 ax.set_xlabel("Number of principal components included")
 ax.set_ylabel("Amount of variance explained")
 
-fig_pca.savefig('pca.png')
+fig_pca.savefig('variance.png')
 
 # projects the centered data onto principal component space, Z
 V = mat(V).T
@@ -170,19 +195,12 @@ zmin = (X_unNorm[:,-1].min())
 cm = plt.cm.hot
 
 fig = plt.figure()
-ax1 = fig.add_subplot(2,1,1)
-ax2 = fig.add_subplot(2,1,2)
+ax1 = fig.add_subplot(1,1,1)
 ax1.scatter(x_u,y_u,c=z, label="lol", cmap=cm, vmin=zmin, vmax=zmax)
-ax1.set_title("Communities in PCA space, color is violent crime per capita")
+ax1.set_title("PCA: " + titlestr)
 ax1.set_xlabel("PCA #"+str(i))
 ax1.set_ylabel("PCA #"+str(j))
-
-
-ax2.scatter(x,y,c=zn, label="lol", cmap=cm)
-ax2.set_title("Communities in PCA space, color is NORM violent crime per capita")
-ax2.set_xlabel("PCA #"+str(i))
-ax2.set_ylabel("PCA #"+str(j))
-
+savefig("pca/"+filestr+".png")
 
 plt.show()
 
