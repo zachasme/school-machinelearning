@@ -53,17 +53,17 @@ elif INVALID_FIX is FILL_MEAN:
 
 X_mean = X.mean(0)[np.newaxis,:] # recalculate mean
 
-#X = np.delete(X, (21), axis=0) # remove row
-#X = np.delete(X, (126), axis=0) # remove row
+#X = np.delete(X, (119), axis=0) # remove row
+#X = np.delete(X, (4), axis=0) # remove row
+#X = np.delete(X, (7), axis=0) # remove row
 #X = np.delete(X, (1432), axis=0) # remove row
 
 
 
-# M: number of attributes
 # N: number of data objects
-(M,N) = X.shape
-print(M)
-print(len(attributeNames))
+# M: number of attributes
+(N,M) = X.shape
+
 # OTHER VARIABLE NAMES:
 # y: class index, a (Nx1) matrix.
 #      for each data object, y contains a class index, y in {0,1,...,C-1}
@@ -107,10 +107,11 @@ i2 = (U[2,:].argmax())
 
 
 
-for i in range(M-1):
-	for j in range(M-1):
+
+for i in range(3):
+	for j in range(i,3):
 		figure()
-		scatter(X[i,:], X[j,:])
+		scatter(X[:,i], X[:,j])
 
 		tt = attributeNames[j] + " as a function of " + attributeNames[i]
 		title(tt)
