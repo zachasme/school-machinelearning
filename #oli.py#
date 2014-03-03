@@ -29,8 +29,13 @@ X = numpy.zeros(shape=(N,M))
 
 # find columns with unknowns
 X_missing = numpy.zeros(shape=(N,M));
-listlol =  [1 if cell == '?' else 0 for cell in row for row in rows]
+listlol =  [cell for cell in row] for row in rows]
 X_missing.flat[:] = listlol
+
+print(len(X_missing))
+print(X_missing.shape)
+print(X.shape)
+print(M*N)
 
 unknown_columns = set();
 for i,row in enumerate(rows):
@@ -83,4 +88,4 @@ title('PCAAAAAAAAAAAAA')
 plot(Z[:,i], Z[:,j], 'o')
 
 # Output result to screen
-show()
+#show()
