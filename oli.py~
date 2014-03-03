@@ -18,11 +18,11 @@ FILL_MEAN = 3 # fill missing with mean
 titlestr=''
 # FUNNY CONSTANTS HAHA
 DISCARD     = 5 # discard first DISCARD columns
-INVALID_FIX = FILL_MEAN
+INVALID_FIX = ELIM_ATTR
 NORMALIZE   = False
-STANDARDIZE = False
-PRENORM     = True
-REMOVE_N = 5
+STANDARDIZE = True
+PRENORM     = False
+REMOVE_N =5
 
 
 filestr = ''
@@ -180,6 +180,8 @@ print(maxindex)
 # Indices of the principal components to be plotted
 i = 0
 j = 1
+k=-5
+print(attributeNames[k])
 
 x = Z[:,i].flat
 x_u = Z_u[:,i].flat
