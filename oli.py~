@@ -22,7 +22,7 @@ INVALID_FIX = ELIM_ATTR
 NORMALIZE   = False
 STANDARDIZE = True
 PRENORM     = False
-REMOVE_N =5
+REMOVE_N =0
 
 
 filestr = ''
