@@ -18,16 +18,18 @@ FILL_MEAN = 3 # fill missing with mean
 titlestr=''
 # FUNNY CONSTANTS HAHA
 DISCARD     = 5 # discard first DISCARD columns
-INVALID_FIX = ELIM_COMM
+INVALID_FIX = FILL_MEAN
 NORMALIZE   = False
 STANDARDIZE = False
 PRENORM     = True
-REMOVE_N = 0
+REMOVE_N = 5
 
 
 filestr = ''
 # read data from comma-separated datafile
-datafile = open('data/communities_norm.data')
+datafile = open('data/communities.data')
+if PRENORM:
+	datafile = open('data/communities_norm.data')
 namefile = open('data/communities.names')
 datareader = csv.reader(datafile, delimiter=',', quotechar='|')
 namereader = csv.reader(namefile, delimiter=',', quotechar='|')
@@ -159,7 +161,7 @@ ax.set_title("Variance as a function of number of PCs")
 ax.set_xlabel("Number of principal components included")
 ax.set_ylabel("Amount of variance explained")
 
-fig_pca.savefig('variance.png')
+fig_pca.savefig('variance'+filestr+'.png')
 
 # projects the centered data onto principal component space, Z
 V = mat(V).T
@@ -196,7 +198,7 @@ cm = plt.cm.hot
 
 fig = plt.figure()
 ax1 = fig.add_subplot(1,1,1)
-ax1.scatter(x_u,y_u,c=z, label="lol", cmap=cm, vmin=zmin, vmax=zmax)
+ax1.scatter(x,y,c=z, label="lol", cmap=cm, vmin=zmin, vmax=zmax)
 ax1.set_title("PCA: " + titlestr)
 ax1.set_xlabel("PCA #"+str(i))
 ax1.set_ylabel("PCA #"+str(j))
