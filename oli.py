@@ -1,86 +1,99 @@
 import csv
-import numpy
+import numpy    as np
+import numpy.ma as ma
 
 from pylab import *
 
-attributeNames = [
-'communityname','State','countyCode','communityCode','fold','pop','perHoush','pctBlack','pctWhite','pctAsian','pctHisp','pct12-21','pct12-29','pct16-24','pct65up','persUrban','pctUrban','medIncome','pctWwage','pctWfarm','pctWdiv','pctWsocsec','pctPubAsst','pctRetire','medFamIncome','perCapInc','whitePerCap','blackPerCap','NAperCap','asianPerCap','otherPerCap','hispPerCap','persPoverty','pctPoverty','pctLowEdu','pctNotHSgrad','pctCollGrad','pctUnemploy','pctEmploy','pctEmployMfg','pctEmployProfServ','pctOccupManu','pctOccupMgmt','pctMaleDivorc','pctMaleNevMar','pctFemDivorc','pctAllDivorc','persPerFam','pct2Par','pctKids2Par','pctKids-4w2Par','pct12-17w2Par','pctWorkMom-6','pctWorkMom-18','kidsBornNevrMarr','pctKidsBornNevrMarr','numForeignBorn','pctFgnImmig-3','pctFgnImmig-5','pctFgnImmig-8','pctFgnImmig-10','pctImmig-3','pctImmig-5','pctImmig-8','pctImmig-10','pctSpeakOnlyEng','pctNotSpeakEng','pctLargHousFam','pctLargHous','persPerOccupHous','persPerOwnOccup','persPerRenterOccup','pctPersOwnOccup','pctPopDenseHous','pctSmallHousUnits','medNumBedrm','houseVacant','pctHousOccup','pctHousOwnerOccup','pctVacantBoarded','pctVacant6up','medYrHousBuilt','pctHousWOphone','pctHousWOplumb','ownHousLowQ','ownHousMed','ownHousUperQ','ownHousQrange','rentLowQ','rentMed','rentUpperQ','rentQrange','medGrossRent','medRentpctHousInc','medOwnCostpct','medOwnCostPctWO','persEmergShelt','persHomeless','pctForeignBorn','pctBornStateResid','pctSameHouse-5','pctSameCounty-5','pctSameState-5','numPolice','policePerPop','policeField','policeFieldPerPop','policeCalls','policCallPerPop','policCallPerOffic','policePerPop2','racialMatch','pctPolicWhite','pctPolicBlack','pctPolicHisp','pctPolicAsian','pctPolicMinority','officDrugUnits','numDiffDrugsSeiz','policAveOT','landArea','popDensity','pctUsePubTrans','policCarsAvail','policOperBudget','pctPolicPatrol','gangUnit','pctOfficDrugUnit','policBudgetPerPop','murders','murdPerPop','rapes','rapesPerPop','robberies','robbbPerPop','assaults','assaultPerPop','burglaries','burglPerPop','larcenies','larcPerPop','autoTheft','autoTheftPerPop','arsons','arsonsPerPop','violentPerPop','nonViolPerPop',
-]
+# DONT CHANGE
+ELIM_COMM = 1 # eliminate communities
+ELIM_ATTR = 2 # eliminate attributes
+FILL_MEAN = 3 # fill missing with mean
+
+
+
+
+
+
+
+# FUNNY CONSTANTS HAHA
+DISCARD = 5 # discard first DISCARD columns
+INVALID_FIX = ELIM_ATTR
 
 # read data from comma-separated datafile
-csvfile = open('data/communities.data')
-csvreader = csv.reader(csvfile, delimiter=',', quotechar='|')
+datafile = open('data/communities.data')
+datareader = csv.reader(datafile, delimiter=',', quotechar='|')
 
-# read each row, discarding first DISCARD columns
-DISCARD = 5
-rows = [row[DISCARD:] for row in list(csvreader)]
+data = [[ np.nan if cell is '?' else float(cell)
+          for cell in row[DISCARD:]] for row in datareader]
 
-# count matrix dimensions
-#X data matrix, rows correspond to N data objects, each of which contains M attributes
-# y (Nx1) class index: for each data object, y contains a class index, y in {0,1,...,C-1} where C is number of classes
-#attributeNames Mx1
-#classNames Cx1
-M = len(rows[1]) # number of attributes
-N = len(rows)    # number of data objects
-# C number of classes
+# X: data matrix, rows correspond to N data objects, each of which contains M attributes
+X = ma.masked_invalid(data) # missing values are masked
 
-# initialize numpy matrix (better performance over regular python 2D arrays)
-X = numpy.zeros(shape=(N,M))
+# preprocesses X
+if INVALID_FIX is ELIM_COMM:
+    # removes data objects with missing values
+    X = ma.compress_rows(X)
+elif INVALID_FIX is ELIM_ATTR:
+    # removes attributes with missing values
+    X = ma.compress_cols(X)
+elif INVALID_FIX is FILL_MEAN:
+    # takes mean where masked value otherwise
+    X = np.where(X.mask, mean[np.newaxis,:], X)
 
-# find columns with unknowns
-X_missing = numpy.zeros(shape=(N,M));
-listlol =  [1 if cell == '?' else 0 for cell in row for row in rows]
-X_missing.flat[:] = listlol
+#X = np.delete(X, (21), axis=0) # remove row
+#X = np.delete(X, (126), axis=0) # remove row
+#X = np.delete(X, (1432), axis=0) # remove row
 
-unknown_columns = set();
-for i,row in enumerate(rows):
-    for j,cell in enumerate(row):
-        if cell == '?':
-            unknown_columns.add(j)
-        else:
-            rows[i][j] = float(cell)
+attributeSums = X.sum(axis=1)
+X = X / attributeSums[:, np.newaxis]
 
-means = {}
-for c in unknown_columns:
-    summed = 0;
-    n = 0;
-    for r in rows:
-        if r[c] != '?':
-            summed += r[c]
-            n += 1
-    means[c] = summed / n
+# M: number of attributes
+# N: number of data objects
+(M,N) = X.shape
 
-for i,row in enumerate(rows):
-    for j,cell in enumerate(row):
-        if cell == '?':
-            row[j] = means[j] # mean?
-    X[i,:] = row
+print(N)
+# OTHER VARIABLE NAMES:
+# y: class index, a (Nx1) matrix.
+#      for each data object, y contains a class index, y in {0,1,...,C-1}
+#      where C is number of classes
+# attributeNames: a Mx1 matrix
+# classNames:     a Cx1 matrix
+# C:              number of classes
 
-## P C fucking A
-#subtract mean
-Y = X - numpy.ones((N,1))*X.mean(0)
-#PCA by computing SVD of Y
+## PeeCeeAaa
+# subtracts mean
+print(X)
+
+mean = X.mean(0)
+Y = X - mean[np.newaxis,:]
+
+
+# computes PCA, by computing SVD of Y
 U,S,V = linalg.svd(Y,full_matrices=False)
 
-
-# Compute variance explained by principal components
+# computes variance explained by principal components
 rho = (S*S) / (S*S).sum() 
+#print(rho)
 
-
+# projects the centered data onto principal component space, Z
 V = mat(V).T
-
-# Project the centered data onto principal component space
 Z = Y * V
+
+
+maxindex = Z.T.argmax()
+print(maxindex)
+
 
 
 # Indices of the principal components to be plotted
 i = 0
 j = 1
 
+
 # Plot PCA of the data
 figure()
 title('PCAAAAAAAAAAAAA')
 plot(Z[:,i], Z[:,j], 'o')
-
+axis('equal')
 # Output result to screen
 show()
