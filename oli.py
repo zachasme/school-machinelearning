@@ -20,7 +20,7 @@ FILL_MEAN = 3 # fill missing with mean
 DISCARD     = 5 # discard first DISCARD columns
 INVALID_FIX = ELIM_COMM
 NORMALIZE   = False
-STANDARDIZE = True
+STANDARDIZE = False
 
 # read data from comma-separated datafile
 datafile = open('data/communities.data')
@@ -30,6 +30,10 @@ namereader = csv.reader(namefile, delimiter=',', quotechar='|')
 
 data = [[ np.nan if cell is '?' else float(cell)
           for cell in row[DISCARD:]] for row in datareader]
+
+
+# attributeNames: a Mx1 matrix
+attributeNames = namereader.next()[DISCARD:] # only one row in file so pop from iterable
 
 # X: data matrix, rows correspond to N data objects, each of which contains M attributes
 X = ma.masked_invalid(data) # missing values are masked
@@ -57,10 +61,9 @@ X_mean = X.mean(0)[np.newaxis,:] # recalculate mean
 
 # M: number of attributes
 # N: number of data objects
-(M,N) = X.shape
-# attributeNames: a Mx1 matrix
-attributeNames = namereader.next() # only one row in file so pop from iterable
-
+(N,M) = X.shape
+print(M)
+print(len(attributeNames))
 # OTHER VARIABLE NAMES:
 # y: class index, a (Nx1) matrix.
 #      for each data object, y contains a class index, y in {0,1,...,C-1}
@@ -92,8 +95,30 @@ Y_u = X_unNorm - X_unNorm_mean
 
 
 # computes PCA, by computing SVD of Y
+# u contains eigenvectors
 U,S,V = linalg.svd(Y,full_matrices=False)
 U_u,S_u,V_u = linalg.svd(Y_u,full_matrices=False)
+
+print("index of biggest component of first eigenvector")
+i1 = (U[1,:].argmax())
+
+print("index of biggest component of second eigenvector")
+i2 = (U[2,:].argmax())
+
+
+
+for i in range(M-1):
+	for j in range(M-1):
+		figure()
+		scatter(X[i,:], X[j,:])
+
+		tt = attributeNames[j] + " as a function of " + attributeNames[i]
+		title(tt)
+		xlabel(attributeNames[i])
+		ylabel(attributeNames[j])
+		savefig("correlations/"+attributeNames[j] + "-as-func-of-" + attributeNames[i]+".png")
+
+
 
 # computes variance explained by principal components
 rho = (S*S) / (S*S).sum() 
@@ -119,6 +144,8 @@ Z_u = Y_u * V_u
 
 maxindex = Z.T.argmax()
 print(maxindex)
+
+
 
 
 
