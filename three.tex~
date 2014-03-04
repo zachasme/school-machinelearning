@@ -77,3 +77,20 @@ There are, however, some obvious attributes with high correlation, like populati
 \end{figure}
 
 We realize now, that a possible problem with our principal component analysis is that we kept all of the violent crime attributes, which have very high correlation.
+
+We also investigated the variance captured by the principal components.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{variance/variancerows-with-missings-removed_5-biggest-outliers-removed_}
+\label{fig:lala}
+\caption{Variance captured as function of number of principal components. Here rows with missing values have been removed. We observe that almost all of the variance is explained by the first PC.}
+\end{figure}
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{variance/varianceattr-with-missings-removed_5-biggest-outliers-removed_}
+\label{fig:lala}
+\caption{Variance captured as function of number of principal components. Here rows with missing values have been removed. We observe that almost all of the variance is explained by the first PC.}
+\end{figure}
