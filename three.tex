@@ -56,14 +56,7 @@ Investigating the work others have performed on the data, leads us to believe th
 \caption{Using normalized data from other source, attributes with missing values are removed.}
 \end{figure}
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.9\textwidth]{pca/missings-filled-w-means_0-biggest-outliers-removed_prenormed_}
-\label{fig:prenorm_attrrem_0out}
-\caption{Using normalized data from other source, missing values replaced with means.}
-\end{figure}
-
-The above data also appears to be normally distributed, in contrast to our own PCA.
+The above data also appears to be normally distributed, in contrast to our own PCA. The first principal component also seems to capture quite well the amount of auto theft.
 
 \begin{figure}[H]
 \centering
@@ -82,3 +75,5 @@ There are, however, some obvious attributes with high correlation, like populati
 \label{fig:prenorm_attrrem_0out}
 \caption{Auto theft as function of population.}
 \end{figure}
+
+We realize now, that a possible problem with our principal component analysis is that we kept all of the violent crime attributes, which have very high correlation.
