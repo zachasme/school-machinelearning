@@ -1,4 +1,3 @@
-
 Based on a principal component analysis of the data (excluding the first columns including only identifier information like state names) there appear to be some potential problems with outliers. In all PCA illustrations, the colors represent amount of auto theft.
 
 \begin{figure}[H]
@@ -48,7 +47,7 @@ We also did PCA where we simply put the means along attributes instead of missin
 \caption{PCA, where missing values have been replaced with means. Also the 5 biggest outliers from before have been removed prior to PCA.}
 \end{figure}
 
-Investigating the work others have performed on the data, leads us to believe that considerably better preprocessing can be done to the data. As an example, we have performed principal component analysis also on the normalized data set produced by others.
+Investigating the work others have performed on the data, leads us to believe that considerably better preprocessing can be done to the data. As an example, we have performed principal component analysis also on the normalized data set produced by [WHO].
 
 \begin{figure}[H]
 \centering
@@ -57,14 +56,7 @@ Investigating the work others have performed on the data, leads us to believe th
 \caption{Using normalized data from other source, attributes with missing values are removed.}
 \end{figure}
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.9\textwidth]{pca/missings-filled-w-means_0-biggest-outliers-removed_prenormed_}
-\label{fig:prenorm_attrrem_0out}
-\caption{Using normalized data from other source, missing values replaced with means.}
-\end{figure}
-
-The above data also appears to be normally distributed, in contrast to our own PCA.
+The above data also appears to be normally distributed, in contrast to our own PCA. The first principal component also seems to capture quite well the amount of auto theft.
 
 \begin{figure}[H]
 \centering
@@ -73,7 +65,7 @@ The above data also appears to be normally distributed, in contrast to our own P
 \caption{Burgleries per population (1K people) as function of percentage of white population.}
 \end{figure}
 
-Many of our attributes have little correlation, as seen above, which is why regression is an obvious machine learning task. Looking at the normalized data by others, furthermore leads us to believe that the task is feasable.
+Many of our attributes have little correlation, as seen above, which is why regression is an obvious machine learning task. Looking at the normalized data by [WHO], furthermore leads us to believe that the task is feasable.
 
 There are, however, some obvious attributes with high correlation, like population and auto theft, as seen below.
 
@@ -82,4 +74,34 @@ There are, however, some obvious attributes with high correlation, like populati
 \includegraphics[width=0.9\textwidth]{correlations/autoTheft-as-func-of-pop}
 \label{fig:prenorm_attrrem_0out}
 \caption{Auto theft as function of population.}
+\end{figure}
+
+We realize now, that a possible problem with our principal component analysis is that we kept all of the violent crime attributes, which have very high correlation.
+
+We also investigated the variance captured by the principal components.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{variance/variancerows-with-missings-removed_5-biggest-outliers-removed_}
+\label{fig:lala}
+\caption{Variance captured as function of number of principal components. Here rows with missing values have been removed. We observe that almost all of the variance is explained by the first PC.}
+\end{figure}
+
+And a lot of the variance seem to be explained by our first principal components.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{variance/varianceattr-with-missings-removed_5-biggest-outliers-removed_}
+\label{fig:lala2}
+\caption{Variance captured as function of number of principal components. Here attributes with missing values have been removed. We observe that much of the variance is explained by the first PC, but less than when removing data objects, as seen above.}
+\end{figure}
+
+The normalized data from other peoples work on the data seem to have a much smoother cummulative variance explained, as seen below.
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{variancemissings-filled-w-means_0-biggest-outliers-removed_prenormed_}
+\label{fig:lal3a}
+\caption{Variance captured as function of number of principal components. This data has been normalized by other people working on the dataset.}
 \end{figure}
