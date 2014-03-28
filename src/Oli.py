@@ -1,8 +1,8 @@
-from pylab import *
+#from pylab import *
 
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 
 class Oli:
@@ -18,8 +18,18 @@ class Oli:
 
 	def __init__(self, data):
 		self.X = pd.DataFrame(data)
-		self.normalize()
-		self.standardize();
+		self.__normalize()
+		#self.__standardize()
+
+	def __normalize(self):
+		"""Adjust all values to be between 0 and 1"""
+		max_values = self.X.max(axis=1)
+		self.X = max_values
+		#self.X = self.X / max_values[:, np.newaxis]
+
+	def __standardize(self):
+		"""Make sure variance is 1"""
+		self.X = (self.X - self.X_mean) / std(X)
 
 	def mean(self):
 		"""Calculates means along TODO:WHAT?"""
@@ -33,14 +43,6 @@ class Oli:
 		(N,M) = X.shape
 		return M
 
-	def normalize(self):
-		"""Adjust all values to be between 0 and 1"""
-		max_values = self.X.max(axis=1)
-		self.X = self.X / max_values[:, np.newaxis]
-
-	def standardize(self):
-		"""Make sure variance is 1"""
-		self.X = (self.X - self.X_mean) / std(X)
 
 	def prep_elim_attr(self):
 		"""removes data objects with missing values"""

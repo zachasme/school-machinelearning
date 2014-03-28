@@ -22,4 +22,6 @@ import Oli
 
 oli = Oli.Oli(data)
 
-Oli.PCA(oli)
+print(oli.X)
+
+#Oli.PCA(oli)
