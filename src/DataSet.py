@@ -1,10 +1,9 @@
 import numpy as np
 import pandas as pd
 
-from pandas.tools.plotting import parallel_coordinates
+import matplotlib.pyplot as plt
 
-#from pylab import *
-#import matplotlib.pyplot as plt
+
 
 
 #from enum import Enum
@@ -17,6 +16,9 @@ class FixMissing:
 class Rescale:
 	NORMALIZE = 0
 	STANDARDIZE = 1
+
+
+
 
 
 
@@ -76,46 +78,6 @@ class DataSet:
 		(_, M) = self.X.shape
 		return M
 
-
-
-
-
-
-class PCA:
-	"""Computes the principal components"""
-	#rho
-	#Z
-
-	def __init__(self, X):
-		"""Performs PCA analysis"""
-		Y     = X - X.mean
-		U,S,V = linalg.svd(Y, full_matrices=False)
-
-		# computes variance explained by principal components
-		self.rho = (S*S) / (S*S).sum() 
-
-		# projects the centered data onto principal component space, Z
-		V = mat(V).T
-		self.Z = Y * V
-
-	def plot_rho(self):
-		fig = figure()
-		set_title("Variance explained as a function of number of PCs")
-		set_xlabel("Number of principal components included")
-		set_ylabel("Amount of variance explained")
-
-		plot(cumsum(self.rho))
-
-	def plot_components(self, i, j):
-		fig = plt.figure()
-		set_title("Plot of principal components "+i+" and "+j+".")
-		set_xlabel("PCA #"+str(i+1))
-		set_ylabel("PCA #"+str(j+1))
-
-		x = self.Z[:,i].flat
-		y = self.Z[:,j].flat
-
-		scatter(x, y, label="TODO:LABEL?")
 
 
 if __name__ == "__main__":

@@ -23,7 +23,7 @@ for rowreader in datareader:
 
 names = next(namereader)
 drop_columns = [
-	'State', 'countyCode', 'communityCode',
+	'State', 'countyCode', 'communityCode', 'communityname',
 	'murders', 'murdPerPop',
 	'rapes', 'rapesPerPop',
 	'robberies', 'robbbPerPop',
@@ -41,10 +41,18 @@ drop_columns = [
 
 
 
-from Oli import *
+from DataSet import *
+from PCA import *
 
-oli = DataSet(data, names, drop_columns=drop_columns, fix_missing=FixMissing.FILLMEAN, rescale=Rescale.NORMALIZE)
+dataset = DataSet(data, names, drop_columns=drop_columns, fix_missing=FixMissing.DROPATTRIBUTES, rescale=Rescale.NORMALIZE)
+print(dataset.X)
 
-print("\n\nstd:",   oli.X.std())
-print("\n\nmean:",  oli.X.mean())
-print("\n\nrange:", oli.X.max()-oli.X.min())
+print(dataset.X.iloc[5,10])
+
+pca = PCA(dataset)
+pca.plot_rho()
+pca.show()
+
+print("\n\nstd:",   dataset.X.std())
+print("\n\nmean:",  dataset.X.mean())
+print("\n\nrange:", dataset.X.max()-dataset.X.min())
