@@ -1,14 +1,23 @@
-from enum import Enum
-
-import pandas as pd
 import numpy as np
+import pandas as pd
+
+from pandas.tools.plotting import parallel_coordinates
 
 #from pylab import *
 #import matplotlib.pyplot as plt
 
 
-FixMissing = Enum('FixMissing', 'FILLMEAN DROPOBJECTS DROPATTRIBUTES')
-Rescale    = Enum('Rescale',    'NORMALIZE STANDARDIZE')
+#from enum import Enum
+#FixMissing = Enum('FixMissing', 'FILLMEAN DROPOBJECTS DROPATTRIBUTES')
+#Rescale    = Enum('Rescale',    'NORMALIZE STANDARDIZE')
+class FixMissing:
+	FILLMEAN = 0
+	DROPOBJECTS = 1
+	DROPATTRIBUTES = 2
+class Rescale:
+	NORMALIZE = 0
+	STANDARDIZE = 1
+
 
 
 class DataSet:
@@ -69,7 +78,11 @@ class DataSet:
 
 
 
+
+
+
 class PCA:
+	"""Computes the principal components"""
 	#rho
 	#Z
 

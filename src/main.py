@@ -48,5 +48,3 @@ oli = DataSet(data, names, drop_columns=drop_columns, fix_missing=FixMissing.FIL
 print("\n\nstd:",   oli.X.std())
 print("\n\nmean:",  oli.X.mean())
 print("\n\nrange:", oli.X.max()-oli.X.min())
-
-#Oli.PCA(oli)
