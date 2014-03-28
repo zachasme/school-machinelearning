@@ -29,93 +29,44 @@ class DataSet:
 			'rescale':      options.get('rescale', False),
 		}
 
-		"""Create the data set"""
-		self.X = pd.DataFrame(data, columns=names)
-
-		"""Drop columns"""
-		self.X = self.X.drop(self.options['drop_columns'], axis=1)
-		"""Preprocessing"""
-		# Fix missing values
-		if self.options['fix_missing'] != False:
-			self.__fixmissing()
-		# Normalize and standardize
-		if self.options['rescale'] != False:
-			self.__rescale()
+		"""Create the data set and preprocess"""
+		df     = pd.DataFrame(data, columns=names)
+		self.X = self.__preprocess(df);
 
 
 
-	def __fixmissing(self):
-		"""Fixes missing values. How depends on option"""
-		if not isinstance( self.options['fix_missing'], FixMissing ):
-			raise Exception("Option 'fix_missing' was given value " + str(self.options['fix_missing']) + ", but needs to be one of " + str(list(FixMissing)))
+	def __preprocess(self, df):
+		# drops unwanted columns
+		df = df.drop(self.options['drop_columns'], axis=1)
 
+		# fixes missing values
 		if self.options['fix_missing'] == FixMissing.FILLMEAN:
-			self.X.fillna(self.X.mean())
+			df.fillna(df.mean())
 		if self.options['fix_missing'] == FixMissing.DROPOBJECTS:
-			self.X = self.X.dropna(axis=0);
+			df = df.dropna(axis=0);
 		if self.options['fix_missing'] == FixMissing.DROPATTRIBUTES:
-			self.X = self.X.dropna(axis=1);
+			df = df.dropna(axis=1);
 
-
-
-	def __rescale(self):
-		"""Rescales data during preprocessing"""
-		if not isinstance( self.options['rescale'], Rescale ):
-			raise Exception("Option 'rescale' was given value " + str(self.options['rescale']) + ", but needs to be one of " + str(list(Rescale)))
-
+		# rescales data by normalization or standardization
 		if self.options['rescale'] == Rescale.NORMALIZE:
 			"""Rescale attributes to lie within interval [0,1]"""
-			self.X = (self.X - self.X.min()) / (self.X.max() - self.X.min())
-
+			df = (df - df.min()) / (df.max() - df.min())
 		if self.options['rescale'] == Rescale.STANDARDIZE:
 			"""Scales data to zero mean (sigma=0) and unit variance (std=1)"""
-			self.X = (self.X - self.X.mean()) / self.X.std();
+			df = (df - df.mean()) / df.std();
+
+		return df
 
 
-
-	def mean(self):
-		"""Calculates means along TODO:WHAT?"""
-		return X.mean(0)[np.newaxis,:]
 
 	def N(self):
-		(N,M) = X.shape
+		(N, _) = self.X.shape
 		return N
 
 	def M(self):
-		(N,M) = X.shape
+		(_, M) = self.X.shape
 		return M
 
-
-	def prep_elim_attr(self):
-		"""removes data objects with missing values"""
-		self.X = ma.compress_rows(X)
-	
-	def prep_elim_objs(self):
-		"""removes attributes with missing values"""
-		self.X = ma.compress_cols(X)
-
-	def prep_fill_mean(self):
-		"""takes mean where masked value otherwise"""
-		self.X = np.where(X.mask, X_mean, X)
-
-	def PCA(self):
-		"""performs PCA analysis"""
-		# first, remove mean, center at 0,0
-		Y = X - X_mean
-		U,S,V = linalg.svd(Y,full_matrices=False)
-
-		# computes variance explained by principal components
-		rho = (S*S) / (S*S).sum() 
-		cumrho = cumsum(rho)
-
-		# projects the centered data onto principal component space, Z
-		V = mat(V).T
-		Z = Y * V
-
-
-
-	def __str__(self):
-		return str(self.X)
 
 
 class PCA:
