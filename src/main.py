@@ -1,8 +1,6 @@
 import csv
 import numpy as np
 
-PREDISCARD = 5 # discard first DISCARD columns
-DISCARD = 5 # discard first DISCARD columns
 DATADIR = '../data/'
 
 """read attribute data and names from comma-separated files"""
@@ -13,18 +11,38 @@ datafile = open(DATADIR + 'communities.data')
 datareader = csv.reader(datafile, delimiter=',', quotechar='|')
 namereader = csv.reader(namefile, delimiter=',', quotechar='|')
 
-data = [[ np.nan if cell is '?' else float(cell)
-          for cell in row[DISCARD:]] for row in datareader]
+data = []
+for rowreader in datareader:
+	row = []
+	for cell in rowreader:
+		try:
+			row.append(float(cell))
+		except:
+			row.append(np.nan)
+	data.append(row)
+
 names = next(namereader)
-
-
+drop_columns = [
+	'State', 'countyCode', 'communityCode',
+	'murders', 'murdPerPop',
+	'rapes', 'rapesPerPop',
+	'robberies', 'robbbPerPop',
+	'assaults', 'assaultPerPop',
+	'burglaries', 'burglPerPop',
+	'larcenies', 'larcPerPop',
+#	'autoTheft', 'autoTheftPerPop',
+	'arsons', 'arsonsPerPop',
+	'violentPerPop',
+	'nonViolPerPop',
+]
 
 
 from Oli import *
 
-oli = DataSet(data, names[DISCARD:], fixna=Fixna.FILLMEAN, standardize=True)
+oli = DataSet(data, names, drop_columns=drop_columns, fix_missing=FixMissing.FILLMEAN, rescale=Rescale.NORMALIZE)
 
-print(oli.X.std())
-print(oli.X.mean())
+print("\n\nstd:",   oli.X.std())
+print("\n\nmean:",  oli.X.mean())
+print("\n\nrange:", oli.X.max()-oli.X.min())
 
 #Oli.PCA(oli)
