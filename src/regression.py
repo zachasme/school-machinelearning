@@ -42,9 +42,9 @@ from PCA import *
 
 oli = DataSet(data, names, drop_columns=drop_columns, fix_missing=FixMissing.DROPOBJECTS, rescale=Rescale.NORMALIZE)
 
-print("\n\nstd:",   oli.X.std())
-print("\n\nmean:",  oli.X.mean())
-print("\n\nrange:", oli.X.max()-oli.X.min())
+#print("\n\nstd:",   oli.X.std())
+#print("\n\nmean:",  oli.X.mean())
+#print("\n\nrange:", oli.X.max()-oli.X.min())
 
 #Oli.PCA(oli)
 
@@ -55,15 +55,16 @@ from toolbox_02450 import feature_selector_lr, bmplot
 import sklearn.linear_model as lm
 
 X = oli.X
-attributeNames = names
+attributeNames = X.columns.values
+
+import pandas as pd
+import neurolab as nl
+import scipy.linalg as linalg
 
 # Split dataset into features and target vector
-y = X.autoTheftPerPop
+y = X.autoTheftPerPop.values
 
-print(X)
-print(X.loc[:, :'policBudgetPerPop'])
-
-X = X.loc[:, :'policBudgetPerPop']
+X = X.loc[:, :'policBudgetPerPop'].values
 
 # Fit ordinary least squares regression model
 model = lm.LinearRegression()
@@ -81,22 +82,26 @@ xlabel('autoTheftPerPop (true)'); ylabel('autoTheftPerPop (estimated)');
 subplot(2, 1, 2)
 hist(residual, 40)
 
-show()
+#show()
 
 N = oli.N()
 M = oli.M()
-
-#X = ma.masked_invalid(data) # missing values are masked
-
-# Add offset attribute
-X = np.concatenate((np.ones((X.shape[0],1)),X),1)
-attributeNames = [u'Offset']+attributeNames
-M = M+1
 
 ## Crossvalidation
 # Create crossvalidation partition for evaluation
 K = 5
 CV = cross_validation.KFold(N,K,shuffle=True)
+
+# Parameters for neural network classifier
+n_hidden_units = 2      # number of hidden units
+n_train = 2             # number of networks trained in each k-fold
+learning_goal = 100     # stop criterion 1 (train mse to be reached)
+max_epochs = 64         # stop criterion 2 (max epochs in training)
+show_error_freq = 5     # frequency of training status updates
+# Variable for classification error
+errors = np.zeros(K)
+error_hist = np.zeros((max_epochs,K))
+bestnet = list()
 
 # Initialize variables
 Features = np.zeros((M,K))
@@ -109,12 +114,9 @@ Error_test_nofeatures = np.empty((K,1))
 
 k=0
 for train_index, test_index in CV:
-    
     # extract training and test set for current CV fold
     X_train = X[train_index]
-    print(X_train)
     y_train = y[train_index]
-    print(y_train)
     X_test = X[test_index]
     y_test = y[test_index]
     internal_cross_validation = 10
@@ -135,6 +137,29 @@ for train_index, test_index in CV:
     m = lm.LinearRegression().fit(X_train[:,selected_features], y_train)
     Error_train_fs[k] = np.square(y_train-m.predict(X_train[:,selected_features])).sum()/y_train.shape[0]
     Error_test_fs[k] = np.square(y_test-m.predict(X_test[:,selected_features])).sum()/y_test.shape[0]
+
+    best_train_error = 1e100
+    for i in range(n_train):
+        X_train = X[train_index,:]
+        y_train = y[train_index,:]
+        X_test = X[test_index,:]
+        y_test = y[test_index,:]
+
+        print('Training network {0}/{1}...'.format(i+1,n_train))
+        # Create randomly initialized network with 2 layers
+        ann = nl.net.newff([[0, 1]]*M, [n_hidden_units, 1], [nl.trans.TanSig(),nl.trans.PureLin()])
+        if i==0:
+            bestnet.append(ann)
+        # train network
+        train_error = ann.train(X_train, y_train, goal=learning_goal, epochs=max_epochs, show=show_error_freq)
+        if train_error[-1]<best_train_error:
+            bestnet[k]=ann
+            best_train_error = train_error[-1]
+            error_hist[range(len(train_error)),k] = train_error
+
+    print('Best train error: {0}...'.format(best_train_error))
+    y_est = bestnet[k].sim(X_test)
+    errors[k] = np.power(y_est-y_test,2).sum().astype(float)/y_test.shape[0]
 
     figure(k)
     subplot(1,2,1)
@@ -194,5 +219,12 @@ for i in range(0,len(ff)):
    xlabel(attributeNames[ff[i]])
    ylabel('residual error')
 
+print('Mean-square error: {0}'.format(mean(errors)))
+figure(k+2);
+subplot(2,1,1); bar(range(0,K),errors); title('Mean-square errors');
+subplot(2,1,2); plot(error_hist); title('Training error as function of BP iterations');
+figure(k+3);
+subplot(2,1,1); plot(y_est); plot(y_test); title('Last CV-fold: est_y vs. test_y'); 
+subplot(2,1,2); plot(y_est-y_test); title('Last CV-fold: prediction error (est_y-test_y)');
 
 show()  
