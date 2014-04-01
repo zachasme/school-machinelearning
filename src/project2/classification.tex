@@ -1,3 +1,6 @@
+
+
+
 \section{Classification}
 \subsection{The problem}
 We chose to look at classifying by state, as that was one of the few nominal attributes in our data set. We also considered computing a new attribute corresponding to the dominant ethnicity of the community population. However, we are sceptical that any meaningful classification can be made.
@@ -21,4 +24,29 @@ Our K-nearest neighbours implementation (run with maximum neigbours 30 and only 
 
 \subsection{Classification of new data}
 New data may be predicted using the the knclassifier object of the prefered model. Similarly, the nb\_classifier may be used for the Naive Bayes model.
+
+For the K-nearest neighbours model, new data is classified by taking the majority class of the k nearest neighbours.
+
+The error rates look very suspicious, probably due to either programming error or that the data doesn't classify easily.
+
+\subsection{T-test}
+    \begin{figure}[H]
+      \centering
+        \includegraphics[width=0.7\linewidth]{figures/knnvsnaive}
+        \caption{T test of KNN and Naive bayes.}
+        \label{fig:k}
+    \end{figure}
+    \begin{figure}[H]
+      \centering
+        \includegraphics[width=0.7\linewidth]{figures/knnvslog}
+        \caption{T test of KNN and Logistic Regression.}
+        \label{fig:k}
+    \end{figure}
+    \begin{figure}[H]
+      \centering
+        \includegraphics[width=0.7\linewidth]{figures/logvsnaive}
+        \caption{T test of logistic regression and Naive bayes.}
+        \label{fig:k}
+    \end{figure}
+Our t-test yields that the k-nearest neighbour and naive bayes classifier models are significantly different (with p=0.0007135281700851776). The other t-test comparisons gave us that the models weren't significantly different.
 
