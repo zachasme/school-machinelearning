@@ -80,7 +80,7 @@ est_prior = True   # uniform prior (change to True to estimate prior from data)
 # K-fold crossvalidation
 K = 10
 CV = cross_validation.KFold(N,K,shuffle=True)
-
+cls = None
 errors = np.zeros(K)
 k=0
 for train_index, test_index in CV:
@@ -93,6 +93,7 @@ for train_index, test_index in CV:
     y_test = y[test_index]
     
     nb_classifier = MultinomialNB(alpha=alpha, fit_prior=est_prior)
+    cls = nb_classifier
     nb_classifier.fit(X_train, y_train)
     y_est_prob = nb_classifier.predict_proba(X_test)
     y_est = np.argmax(y_est_prob,1)
@@ -110,3 +111,5 @@ xlabel('Number of neighbors')
 ylabel('Classification error rate (%)')
 show()
 savefig("classy-as-knn.png")
+
+print(nb_classifier)
