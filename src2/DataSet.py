@@ -85,7 +85,7 @@ class DataSet:
 		self.__preprocess();
 
 		self.__y = self.__df['y'].values
-		self.__df.drop(['y'], axis=1, inplace=True)
+		self.__df = self.__df.drop(['y'], axis=1)
 
 
 
@@ -102,7 +102,7 @@ class DataSet:
 		if self.options['fix_missing'] == FixMissing.DROPOBJECTS:
 			self.__df.dropna(axis=0, inplace=True);
 		if self.options['fix_missing'] == FixMissing.DROPATTRIBUTES:
-			self.__df.dropna(axis=1, inplace=True);
+			self.__df = self.__df.dropna(axis=1);
 
 		y = self.__df['y']
 		# rescales data by normalization or standardization
