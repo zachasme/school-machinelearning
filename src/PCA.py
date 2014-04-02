@@ -25,7 +25,6 @@ class PCA:
 		plt.figure()		
 		cumsum = self.rho.cumsum()
 		cumsum.plot()
-		plt.show()
 
 	def show(self):
 		i = 0
@@ -36,7 +35,6 @@ class PCA:
 		y = self.Z.iloc[:,j]
 
 		plt.scatter(x, y, label="TODO:LABEL?")
-		plt.show()
 
 
 if __name__ == "__main__":

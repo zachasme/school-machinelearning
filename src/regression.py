@@ -30,7 +30,8 @@ drop_columns = [
 	'assaults', 'assaultPerPop',
 	'burglaries', 'burglPerPop',
 	'larcenies', 'larcPerPop',
-#	'autoTheft', 'autoTheftPerPop',
+	'autoTheft',
+#    'autoTheftPerPop',
 	'arsons', 'arsonsPerPop',
 	'violentPerPop',
 	'nonViolPerPop',
@@ -54,18 +55,24 @@ from sklearn import cross_validation
 from toolbox_02450 import feature_selector_lr, bmplot
 import sklearn.linear_model as lm
 
+
 X = oli.X
+#X.drop(['fold'], axis=1)
 attributeNames = X.columns.values
 
 import pandas as pd
 import neurolab as nl
 import scipy.linalg as linalg
+from pylab import *
+from scipy import stats
 
 # Split dataset into features and target vector
 y = X.autoTheftPerPop.values
+X = X.drop(['autoTheftPerPop'], axis=1).values
+#X = X[50:70,:]
 
-X = X.loc[:, :'policBudgetPerPop'].values
-
+print(y)
+'''
 # Fit ordinary least squares regression model
 model = lm.LinearRegression()
 model.fit(X,y)
@@ -82,10 +89,10 @@ xlabel('autoTheftPerPop (true)'); ylabel('autoTheftPerPop (estimated)');
 subplot(2, 1, 2)
 hist(residual, 40)
 
-#show()
+show()
+'''
 
-N = oli.N()
-M = oli.M()
+N, M = X.shape
 
 ## Crossvalidation
 # Create crossvalidation partition for evaluation
@@ -93,9 +100,9 @@ K = 5
 CV = cross_validation.KFold(N,K,shuffle=True)
 
 # Parameters for neural network classifier
-n_hidden_units = 2      # number of hidden units
+n_hidden_units = 5      # number of hidden units
 n_train = 2             # number of networks trained in each k-fold
-learning_goal = 100     # stop criterion 1 (train mse to be reached)
+learning_goal = 100    # stop criterion 1 (train mse to be reached)
 max_epochs = 64         # stop criterion 2 (max epochs in training)
 show_error_freq = 5     # frequency of training status updates
 # Variable for classification error
@@ -111,7 +118,7 @@ Error_train_fs = np.empty((K,1))
 Error_test_fs = np.empty((K,1))
 Error_train_nofeatures = np.empty((K,1))
 Error_test_nofeatures = np.empty((K,1))
-
+selected_features = []
 k=0
 for train_index, test_index in CV:
     # extract training and test set for current CV fold
@@ -138,28 +145,27 @@ for train_index, test_index in CV:
     Error_train_fs[k] = np.square(y_train-m.predict(X_train[:,selected_features])).sum()/y_train.shape[0]
     Error_test_fs[k] = np.square(y_test-m.predict(X_test[:,selected_features])).sum()/y_test.shape[0]
 
-    best_train_error = 1e100
-    for i in range(n_train):
-        X_train = X[train_index,:]
-        y_train = y[train_index,:]
-        X_test = X[test_index,:]
-        y_test = y[test_index,:]
+    # Fit ordinary least squares regression model
+    m.fit(X,y)
+    # Predict autotheftperpop
+    y_est = m.predict(X)
+    residual = y_est - y
 
-        print('Training network {0}/{1}...'.format(i+1,n_train))
-        # Create randomly initialized network with 2 layers
-        ann = nl.net.newff([[0, 1]]*M, [n_hidden_units, 1], [nl.trans.TanSig(),nl.trans.PureLin()])
-        if i==0:
-            bestnet.append(ann)
-        # train network
-        train_error = ann.train(X_train, y_train, goal=learning_goal, epochs=max_epochs, show=show_error_freq)
-        if train_error[-1]<best_train_error:
-            bestnet[k]=ann
-            best_train_error = train_error[-1]
-            error_hist[range(len(train_error)),k] = train_error
+    # Display scatter plot
+    figure(10)
+    subplot(2, 1, 1)
+    plot(y, y_est, '.')
+    xlabel('autoTheftPerPop (true)'); ylabel('autoTheftPerPop (estimated)');
+    subplot(2, 1, 2)
+    hist(residual, 40)
 
-    print('Best train error: {0}...'.format(best_train_error))
-    y_est = bestnet[k].sim(X_test)
-    errors[k] = np.power(y_est-y_test,2).sum().astype(float)/y_test.shape[0]
+    y_avg = y.fill(np.average(y))
+    figure(11)
+    subplot(2, 1, 1)
+    plot(y, y_avg, '.')
+    xlabel('autoTheftPerPop (true)'); ylabel('autoTheftPerPop (average)');
+    subplot(2, 1, 2)
+    hist(residual, 40)
 
     figure(k)
     subplot(1,2,1)
@@ -177,9 +183,58 @@ for train_index, test_index in CV:
     print('Test indices: {0}'.format(test_index))
     print('Features no: {0}\n'.format(selected_features.size))
 
+    print(selected_features)
+    print(attributeNames[selected_features])
+    # The coefficients
+    print 'Coefficients: \n', m.coef_
+    print(m.coef_[selected_features])
+    absarr = m.coef_
+    print(np.argsort(absarr)[-6:])
+    print(m.coef_[np.argsort(absarr)[-6:]])
+    print(attributeNames[np.argsort(absarr)[-6:]])
+    print(np.argsort(absarr)[:6])
+    print(m.coef_[np.argsort(absarr)[:6]])
+    print(attributeNames[np.argsort(absarr)[:6]])
+
     k+=1
 
-    # Display results
+'''
+X = X[:,selected_features]
+
+N, M = X.shape
+
+## Crossvalidation
+# Create crossvalidation partition for evaluation
+K = 3
+CV = cross_validation.KFold(N,K,shuffle=True)
+k=0
+for train_index, test_index in CV:
+    print('\nCrossvalidation fold: {0}/{1}'.format(k+1,K))
+
+    # extract training and test set for current CV fold
+    X_train = X[train_index,:]
+    y_train = y[train_index,:]
+    X_test = X[test_index,:]
+    y_test = y[test_index,:]
+
+    best_train_error = 1e100
+    for i in range(n_train):
+        print('Training network {0}/{1}...'.format(i+1,n_train))
+        # Create randomly initialized network with 2 layers
+        ann = nl.net.newff([[0, 1]]*M, [n_hidden_units, 1], [nl.trans.TanSig(),nl.trans.PureLin()])
+        # train network
+        train_error = ann.train(X_train, y_train, goal=learning_goal, epochs=max_epochs)
+        if train_error[-1]<best_train_error:
+            bestnet[k]=ann
+            best_train_error = train_error[-1]
+            error_hist[range(len(train_error)),k] = train_error
+
+    print('Best train error: {0}...'.format(best_train_error))
+    y_est = bestnet[k].sim(X_test)
+    errors[k] = np.power(y_est-y_test,2).sum().astype(float)/y_test.shape[0]
+    k+=1
+'''
+
 print('\n')
 print('Linear regression without feature selection:\n')
 print('- Training error: {0}'.format(Error_train.mean()))
@@ -192,6 +247,15 @@ print('- Test error:     {0}'.format(Error_test_fs.mean()))
 print('- R^2 train:     {0}'.format((Error_train_nofeatures.sum()-Error_train_fs.sum())/Error_train_nofeatures.sum()))
 print('- R^2 test:     {0}'.format((Error_test_nofeatures.sum()-Error_test_fs.sum())/Error_test_nofeatures.sum()))
 
+[tstatistic, pvalue] = stats.ttest_ind(Error_train,Error_train_fs)
+if pvalue<=0.05:
+    print('Regressions are significantly different. (p={0})'.format(pvalue[0]))
+else:
+    print('Regressions are not significantly different (p={0})'.format(pvalue[0]))
+figure(20)
+boxplot(np.bmat('Error_train, Error_train_fs'))
+xlabel('Regression without feature selection  vs.  Regression with feature selection')
+ylabel('Cross-validation error [%]')
 
 figure(k)
 subplot(1,3,2)
@@ -219,6 +283,7 @@ for i in range(0,len(ff)):
    xlabel(attributeNames[ff[i]])
    ylabel('residual error')
 
+'''
 print('Mean-square error: {0}'.format(mean(errors)))
 figure(k+2);
 subplot(2,1,1); bar(range(0,K),errors); title('Mean-square errors');
@@ -226,5 +291,5 @@ subplot(2,1,2); plot(error_hist); title('Training error as function of BP iterat
 figure(k+3);
 subplot(2,1,1); plot(y_est); plot(y_test); title('Last CV-fold: est_y vs. test_y'); 
 subplot(2,1,2); plot(y_est-y_test); title('Last CV-fold: prediction error (est_y-test_y)');
-
+'''
 show()  

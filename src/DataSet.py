@@ -52,7 +52,7 @@ class DataSet:
 
 		# fixes missing values
 		if self.options['fix_missing'] == FixMissing.FILLMEAN:
-			df.fillna(df.mean())
+			df.fillna(df.mean(), inplace=True)
 		if self.options['fix_missing'] == FixMissing.DROPOBJECTS:
 			df = df.dropna(axis=0);
 		if self.options['fix_missing'] == FixMissing.DROPATTRIBUTES:

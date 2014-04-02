@@ -275,7 +275,7 @@ Error_test_nofeatures = np.empty((K,1))
 k=0
 for train_index, test_index in CV:
     
-    # extract training and test set for current CV fold
+    # extract training and test set for current CV foldO
     X_train = X[train_index]
     y_train = y[train_index]
     X_test = X[test_index]

@@ -52,6 +52,7 @@ print(dataset.X.iloc[5,10])
 pca = PCA(dataset)
 pca.plot_rho()
 pca.show()
+plt.show()
 
 print("\n\nstd:",   dataset.X.std())
 print("\n\nmean:",  dataset.X.mean())
