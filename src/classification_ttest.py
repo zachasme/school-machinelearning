@@ -55,12 +55,12 @@ dataset = DataSet(data, names, class_column='State', drop_columns=drop_columns, 
 
 y = np.mat(np.zeros((len(names),1)))
 
-X = dataset.X.values
-y = dataset.y
-N = dataset.N
-M = dataset.M
+TO = 50
+X = dataset.X.values[0:TO,:]
+y = dataset.y[0:TO]
+N, M = X.shape
 classNames = dataset.classNames
-attributeNames = dataset.attributeNames
+attributeNames = dataset.attributeNames[0:TO]
 
 
 
@@ -99,6 +99,7 @@ CV = cross_validation.KFold(N,K,shuffle=True)
 # Initialize variables
 Error_nb = np.empty((K,1))
 Error_kn = np.empty((K,1))
+Error_logreg = np.empty((K,1))
 n_tested=0
 
 k=0
@@ -128,6 +129,12 @@ for train_index, test_index in CV:
     #y_est = np.argmax(y_est_prob,1)
     #errors[k] = np.sum(y_est.ravel()!=y_test.ravel(),dtype=float)/y_test.shape[0]
 
+    # Fit and evaluate Logistic Regression classifier
+    model3 = lm.logistic.LogisticRegression(C=N)
+    model3 = model3.fit(X_train, y_train)
+    y_logreg = np.mat(model3.predict(X_test)).T
+    Error_logreg[k] = 100*(y_logreg!=y_test).sum().astype(float)/len(y_test)
+
     k+=1
 
 # Use T-test to check if classifiers are significantly different
@@ -140,7 +147,39 @@ else:
 # Boxplot to compare classifier error distributions
 figure()
 boxplot(np.bmat('Error_kn, Error_nb'))
-xlabel('Logistic Regression   vs.   Decision Tree')
+xlabel('KNN vs Naive Bayes')
+ylabel('Cross-validation error [%]')
+
+
+
+
+# Use T-test to check if classifiers are significantly different
+[tstatistic, pvalue] = stats.ttest_ind(Error_kn,Error_logreg)
+if pvalue<=0.05:
+    print('Classifiers are significantly different. (p={0})'.format(pvalue[0]))
+else:
+    print('Classifiers are not significantly different (p={0})'.format(pvalue[0]))        
+    
+# Boxplot to compare classifier error distributions
+figure()
+boxplot(np.bmat('Error_kn, Error_logreg'))
+xlabel('KNN vs LogisticRegression')
+ylabel('Cross-validation error [%]')
+
+
+
+
+# Use T-test to check if classifiers are significantly different
+[tstatistic, pvalue] = stats.ttest_ind(Error_logreg,Error_nb)
+if pvalue<=0.05:
+    print('Classifiers are significantly different. (p={0})'.format(pvalue[0]))
+else:
+    print('Classifiers are not significantly different (p={0})'.format(pvalue[0]))        
+    
+# Boxplot to compare classifier error distributions
+figure()
+boxplot(np.bmat('Error_logreg, Error_nb'))
+xlabel('LogisticRegression vs Naive Bayes')
 ylabel('Cross-validation error [%]')
 
 show()
