@@ -1,25 +1,32 @@
-from DataSet import *
+import pylab as pl
 
-datafile = '../data/raw.csv'
-crime    = DataSet(datafile)
 
-crime.drop([
-	'state',
-#	'countyCode',
-#	'communityCode',
-	'communityname',
-#	'fold',
-#	'murders', 'murdPerPop',
-#	'rapes', 'rapesPerPop',
-#	'robberies', 'robbbPerPop',
-#	'assaults', 'assaultPerPop',
-#	'burglaries', 'burglPerPop',
-#	'larcenies', 'larcPerPop',
-#	'autoTheft', 'autoTheftPerPop',
-#	'arsons', 'arsonsPerPop',
-#	'ViolentPerPop',
-#	'nonViolPerPop',
+from Framework.DataSet import *
+
+crime = DataSet(datafile='../data/raw.csv', nominals=['state','communityname','countyCode','communityCode'])
+
+#crime = crime.drop(['state', 'communityname']) 	  # Drop strings
+#crime = crime.drop(['countyCode','communityCode']) # Drop nominals
+crime = crime.drop_columns([
+	'fold',
+	'murders', 'murdPerPop',
+	'rapes', 'rapesPerPop',
+	'robberies', 'robbbPerPop',
+	'assaults', 'assaultPerPop',
+	'burglaries', 'burglPerPop',
+	'larcenies', 'larcPerPop',
+	'autoTheft', 'autoTheftPerPop',
+	'arsons', 'arsonsPerPop',
+	'ViolentCrimesPerPop',
+	'nonViolPerPop',
 ])
+crime = crime.normalize()
+crime = crime.fix_missing(fill_mean=True)
+
+print(crime)
 
 
-print(crime.X)
+
+#from Framework.PCA import *
+#pca = PCA(crime)
+#pca.plot()
