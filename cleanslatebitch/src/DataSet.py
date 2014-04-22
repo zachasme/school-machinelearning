@@ -110,6 +110,12 @@ class DataSet:
 			"""Scales data to zero mean (sigma=0) and unit variance (std=1)"""
 			self.__df = (self.__df - self.__df.mean()) / self.__df.std();
 
+	def binarize(self, column, bins):
+		bins = pd.cut(self.__df[column], bins)
+
+		cols = pd.crosstab(self.__df.index, bins)
+		cols.index.name = "LOL"
+		return (cols)
 
 
 	def drop(self, columns):

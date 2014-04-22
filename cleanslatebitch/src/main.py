@@ -22,4 +22,4 @@ crime.drop([
 ])
 
 
-print(crime.X)
+print(crime.binarize('assaults', 4))
