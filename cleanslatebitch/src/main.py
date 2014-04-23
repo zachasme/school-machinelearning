@@ -23,10 +23,12 @@ crime = crime.drop_columns([
 crime = crime.normalize()
 
 
-
 crime = crime.discretize('arsons', 4)
+crime = crime.classIn('arsons')
+print(crime.C);
+
 crime = crime.binarize('state')
-print(crime)
+#print(crime)
 #from Framework.PCA import *
 #pca = PCA(crime)
 #pca.plot()
