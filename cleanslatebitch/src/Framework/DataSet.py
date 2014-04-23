@@ -156,15 +156,10 @@ class DataSet:
 		return self._copy( nominals=nominals )
 
 	def binarize(self, column, bins=1):
-		if column in self._nominals:
-			cols = pd.crosstab(self.df.index, self.df[column])
-		else:
-			# bins each object
-			bins = pd.cut(self.df[column], bins)
-			# creates binary attributes
-			cols = pd.crosstab(self.df.index, bins)
-			# prepends column name to interval labels
-			cols = cols.rename(columns=lambda x: column + x)
+		# creates binary attributes
+		cols = pd.crosstab(self.df.index, self.df[column])
+		# prepends column name to interval labels
+		cols = cols.rename(columns=lambda x: str(column) + str(x))
 
 		# removes old column
 		newthing = self.drop_columns([column])

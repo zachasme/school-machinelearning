@@ -25,7 +25,8 @@ crime = crime.normalize()
 
 
 crime = crime.discretize('arsons', 4)
-print(crime.df.arsons)
+crime = crime.binarize('state')
+print(crime)
 #from Framework.PCA import *
 #pca = PCA(crime)
 #pca.plot()
