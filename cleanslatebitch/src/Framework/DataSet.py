@@ -23,6 +23,8 @@ class DataSet:
 		"""Creates the data set"""
 		self._nominals = nominals
 
+		self.classColumn = None
+
 		if datafile is not None:
 			self.df = pd.read_csv(datafile, na_values=['?'])
 		elif dataframe is not None:
@@ -146,12 +148,29 @@ class DataSet:
 
 
 
-	def binarize(self, column, bins):
+	def discretize(self, column, bins):
 		bins = pd.cut(self.df[column], bins)
+		self.df[column] = bins
+		nominals = self._nominals + [column]
 
-		cols = pd.crosstab(self.df.index, bins)
-		cols.index.name = "LOL"
-		return (cols)
+		return self._copy( nominals=nominals )
+
+	def binarize(self, column, bins=1):
+		if column in self._nominals:
+			cols = pd.crosstab(self.df.index, self.df[column])
+		else:
+			# bins each object
+			bins = pd.cut(self.df[column], bins)
+			# creates binary attributes
+			cols = pd.crosstab(self.df.index, bins)
+			# prepends column name to interval labels
+			cols = cols.rename(columns=lambda x: column + x)
+
+		# removes old column
+		newthing = self.drop_columns([column])
+
+		# joins new columns to dataframe
+		return self._copy( dataframe=cols.join(self.df) )
 
 
 
