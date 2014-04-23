@@ -162,10 +162,10 @@ class DataSet:
 		cols = cols.rename(columns=lambda x: str(column) + str(x))
 
 		# removes old column
-		newthing = self.drop_columns([column])
+		dropped = self.drop_columns([column])
 
 		# joins new columns to dataframe
-		return self._copy( dataframe=cols.join(self.df) )
+		return dropped._copy( dataframe=cols.join(dropped.df) )
 
 
 
