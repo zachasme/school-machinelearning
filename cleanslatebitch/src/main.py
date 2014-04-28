@@ -16,17 +16,19 @@ crime = crime.drop_columns([
 	'burglaries', 'burglPerPop',
 	'larcenies', 'larcPerPop',
 	'autoTheft', 'autoTheftPerPop',
-	'arsons', 'arsonsPerPop',
+	#'arsons', 'arsonsPerPop',
 	'ViolentCrimesPerPop',
 	'nonViolPerPop',
 ])
 crime = crime.normalize()
-crime = crime.fix_missing(fill_mean=True)
 
-print(crime)
 
-print(crime.binarize('assaults', 4))
-from Framework.PCA import *
-pca = PCA(crime)
-pca.plot()
+crime = crime.discretize('arsons', 4)
+crime = crime.classIn('arsons')
+print(crime.C);
 
+crime = crime.binarize('state')
+#print(crime)
+#from Framework.PCA import *
+#pca = PCA(crime)
+#pca.plot()

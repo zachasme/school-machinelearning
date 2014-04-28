@@ -19,9 +19,10 @@ class FixMissing:
 
 
 class DataSet:
-	def __init__( self, datafile=None, dataframe=None, nominals=[] ):
+	def __init__( self, datafile=None, dataframe=None, nominals=[], classColumn=None ):
 		"""Creates the data set"""
 		self._nominals = nominals
+		self._classColumn = classColumn
 
 		if datafile is not None:
 			self.df = pd.read_csv(datafile, na_values=['?'])
@@ -31,14 +32,16 @@ class DataSet:
 		self._df_nominals     = self.df[self._nominals]
 		self._df_non_nominals = self.df[self.df.columns - self._nominals]
 
-	def _copy(self, dataframe=None, nominals=None):
+	def _copy(self, dataframe=None, nominals=None, classColumn=None ):
 		"""Creates a new dataset from dataframe but with same internal attributes"""
 		if dataframe is None:
 			dataframe = self.df
 		if nominals is None:
 			nominals = self._nominals
+		if classColumn is None:
+			classColumn = self._classColumn
 
-		return DataSet( dataframe=dataframe, nominals=nominals)
+		return DataSet( dataframe=dataframe, nominals=nominals, classColumn=classColumn )
 
 
 	@property
@@ -87,7 +90,7 @@ class DataSet:
 		type: list
 		size: C x 1
 		"""
-		return self.__classNames
+		return self.df[self._classColumn].unique()
 
 	@property
 	def y(self):
@@ -95,6 +98,11 @@ class DataSet:
 		   for each data object, y contains a class index,
 		   y in {0,1,...,C-1} where C is number of classes"""
 		return self.__y
+
+
+
+	def classIn(self, classColumn):
+		return self._copy( classColumn=classColumn )
 
 
 
@@ -146,12 +154,24 @@ class DataSet:
 
 
 
-	def binarize(self, column, bins):
+	def discretize(self, column, bins):
 		bins = pd.cut(self.df[column], bins)
+		self.df[column] = bins
+		nominals = self._nominals + [column]
 
-		cols = pd.crosstab(self.df.index, bins)
-		cols.index.name = "LOL"
-		return (cols)
+		return self._copy( nominals=nominals )
+
+	def binarize(self, column, bins=1):
+		# creates binary attributes
+		cols = pd.crosstab(self.df.index, self.df[column])
+		# prepends column name to interval labels
+		cols = cols.rename(columns=lambda x: str(column) + str(x))
+
+		# removes old column
+		dataframe = self.drop_columns([column])
+
+		# joins new columns to dataframe
+		return dataframe._copy( dataframe=cols.join(dataframe.df) )
 
 
 
