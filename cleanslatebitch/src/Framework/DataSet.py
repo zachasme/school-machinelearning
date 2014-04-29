@@ -3,31 +3,17 @@ import pandas as pd
 
 import matplotlib.pyplot as plt
 
-
-
-
-#from enum import Enum
-#FixMissing = Enum('FixMissing', 'FILLMEAN DROPOBJECTS DROPATTRIBUTES')
-#Rescale    = Enum('Rescale',    'NORMALIZE STANDARDIZE')
-class FixMissing:
-	FILLMEAN = 0
-	DROPOBJECTS = 1
-	DROPATTRIBUTES = 2
-
-
-
-
-
 class DataSet:
 	def __init__( self, datafile=None, dataframe=None, nominals=[], classColumn=None ):
 		"""Creates the data set"""
-		self._nominals = nominals
-		self._classColumn = classColumn
 
 		if datafile is not None:
 			self.df = pd.read_csv(datafile, na_values=['?'])
 		elif dataframe is not None:
 			self.df = dataframe
+
+		self._nominals = [nominal for nominal in nominals if nominal in self.df.columns]
+		self._classColumn = classColumn
 
 		self._df_nominals     = self.df[self._nominals]
 		self._df_non_nominals = self.df[self.df.columns - self._nominals]
@@ -111,6 +97,11 @@ class DataSet:
 		nominals  = [column for column in self._nominals if column not in columns]
 
 		return self._copy( dataframe=dataframe, nominals=nominals )
+
+	def take_columns(self, columns):
+		dataframe = self.df[columns]
+
+		return self._copy( dataframe=dataframe )
 
 	def drop_nominals(self):
 		return self.drop_columns(self._nominals)
