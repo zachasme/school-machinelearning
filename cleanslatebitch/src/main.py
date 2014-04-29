@@ -24,8 +24,13 @@ crime = crime.normalize()
 
 
 crime = crime.discretize('arsons', 4)
-crime = crime.binarize('arsons')
-print(crime);
+
+crime2 = crime.binarize('arsons')
+print(crime2);
+
+crime3 = crime.classIn('arsons')
+print(crime3.y);
+
 
 crime = crime.binarize('state')
 #print(crime)
