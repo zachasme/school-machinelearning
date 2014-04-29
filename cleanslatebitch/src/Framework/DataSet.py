@@ -3,21 +3,6 @@ import pandas as pd
 
 import matplotlib.pyplot as plt
 
-
-
-
-#from enum import Enum
-#FixMissing = Enum('FixMissing', 'FILLMEAN DROPOBJECTS DROPATTRIBUTES')
-#Rescale    = Enum('Rescale',    'NORMALIZE STANDARDIZE')
-class FixMissing:
-	FILLMEAN = 0
-	DROPOBJECTS = 1
-	DROPATTRIBUTES = 2
-
-
-
-
-
 class DataSet:
 	def __init__( self, datafile=None, dataframe=None, nominals=[], classColumn=None ):
 		"""Creates the data set"""
