@@ -18,17 +18,9 @@ crime = crime.drop_columns([
 	'autoTheft', 'autoTheftPerPop',
 	#'arsons', 'arsonsPerPop',
 	'ViolentCrimesPerPop',
-	'nonViolPerPop',
+	#'nonViolPerPop',
 ])
 crime = crime.normalize()
 
-
-crime = crime.discretize('arsons', 4)
-crime = crime.binarize('arsons')
-print(crime);
-
-crime = crime.binarize('state')
-#print(crime)
-#from Framework.PCA import *
-#pca = PCA(crime)
-#pca.plot()
+crime = crime.take_columns(['nonViolPerPop', 'arsons'])
+print(crime)
