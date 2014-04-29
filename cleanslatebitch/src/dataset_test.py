@@ -20,7 +20,10 @@ crime = crime.drop_columns([
 	'ViolentCrimesPerPop',
 	#'nonViolPerPop',
 ])
+print(type(crime.X))
+
 crime = crime.normalize()
 
+
 crime = crime.take_columns(['nonViolPerPop', 'arsons'])
-print(crime)
+#print(crime)

@@ -3,6 +3,7 @@ import pandas as pd
 
 import matplotlib.pyplot as plt
 
+
 class DataSet:
 	def __init__( self, datafile=None, dataframe=None, nominals=[], classColumn=None ):
 		"""Creates the data set"""
@@ -84,7 +85,8 @@ class DataSet:
 		"""class index, a (Nx1) matrix.
 		   for each data object, y contains a class index,
 		   y in {0,1,...,C-1} where C is number of classes"""
-		return self.df[self._classColumn].apply(lambda x: np.nan if x is np.nan else self.classNames.tolist().index(x))
+		return self.df[self._classColumn].apply(lambda x: np.nan if x is np.nan else self.classNames.tolist().index(x)).as_matrix()
+
 
 
 
