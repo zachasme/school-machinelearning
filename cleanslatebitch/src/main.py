@@ -5,8 +5,6 @@ from Framework.DataSet import *
 
 crime = DataSet(datafile='../data/raw.csv', nominals=['state','communityname','countyCode','communityCode'])
 
-#crime = crime.drop(['state', 'communityname']) 	  # Drop strings
-#crime = crime.drop(['countyCode','communityCode']) # Drop nominals
 crime = crime.drop_columns([
 	'fold',
 	'murders', 'murdPerPop',
@@ -16,7 +14,7 @@ crime = crime.drop_columns([
 	'burglaries', 'burglPerPop',
 	'larcenies', 'larcPerPop',
 	'autoTheft', 'autoTheftPerPop',
-	#'arsons', 'arsonsPerPop',
+#	'arsons', 'arsonsPerPop',
 	'ViolentCrimesPerPop',
 	'nonViolPerPop',
 ])
@@ -24,8 +22,10 @@ crime = crime.normalize()
 
 
 crime = crime.discretize('arsons', 4)
+print(crime.df.arsons)
 crime = crime.classIn('arsons')
-print(crime.C);
+print(crime)
+
 
 crime = crime.binarize('state')
 #print(crime)
