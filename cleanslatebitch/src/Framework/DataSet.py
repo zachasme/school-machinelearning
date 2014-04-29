@@ -77,8 +77,7 @@ class DataSet:
 		type: list
 		size: C x 1
 		"""
-		classNamesWithoutNaN = self.df[self._classColumn].dropna();
-		return classNamesWithoutNaN.unique()
+		return self.df[self._classColumn].unique()
 
 	@property
 	def y(self):
@@ -86,7 +85,6 @@ class DataSet:
 		   for each data object, y contains a class index,
 		   y in {0,1,...,C-1} where C is number of classes"""
 		return self.df[self._classColumn].apply(lambda x: np.nan if x is np.nan else self.classNames.tolist().index(x)).as_matrix()
-
 
 
 
