@@ -39,7 +39,8 @@ class DataSet:
 		size: N x M
 
 		The rows correspond to N data objects, each of which contains M attributes"""
-		return self.df.values
+		dataframe = self.drop_columns([self._classColumn])
+		return dataframe.df.values
 
 	@property
 	def attributeNames(self):
