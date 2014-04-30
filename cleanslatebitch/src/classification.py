@@ -17,61 +17,77 @@ crime = crime.drop_columns([
 	'larcenies', 'larcPerPop',
 	'autoTheft', 'autoTheftPerPop',
 	'arsons', 'arsonsPerPop',
-	'ViolentCrimesPerPop',
+	#'ViolentCrimesPerPop',
 	'nonViolPerPop',
 ])
 
 crime = crime.normalize()
 crime = crime.fix_missing(fill_mean=True)
+crime = crime.discretize('ViolentCrimesPerPop',2)
 
-
-crime = crime.classIn('countyCode')
+crime = crime.classIn('ViolentCrimesPerPop')
 
 print(type(crime.X))
 print(crime.y)
 X=crime.X
-y=crime.y
+
+dataset=crime
+y = crime.y
+
+X = dataset.X
+y = dataset.y
+N = dataset.N
+M = dataset.M
+classNames = dataset.classNames
+attributeNames = dataset.attributeNames
 
 
-# exercise 7.1.2
+
+
+# exercise 7.2.4
 
 from pylab import *
-from scipy.io import loadmat
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import MultinomialNB
 from sklearn import cross_validation
 
 
-# Maximum number of neighbors
-N=10
-L=30
-kn = None
-CV = cross_validation.LeaveOneOut(N)
-errors = np.zeros((N,L))
-i=0
+
+# Naive Bayes classifier parameters
+alpha = 1.0         # additive parameter (e.g. Laplace correction)
+est_prior = True   # uniform prior (change to True to estimate prior from data)
+
+# K-fold crossvalidation
+K = 100
+CV = cross_validation.KFold(N,K,shuffle=True)
+cls = None
+errors = np.zeros(K)
+k=0
 for train_index, test_index in CV:
-    print('Crossvalidation fold: {0}/{1}'.format(i+1,N))    
+    print('Crossvalidation fold: {0}/{1}'.format(k+1,K))    
     
     # extract training and test set for current CV fold
     X_train = X[train_index,:]
     y_train = y[train_index]
     X_test = X[test_index,:]
     y_test = y[test_index]
-
-    # Fit classifier and classify the test points (consider 1 to 40 neighbors)
-    for l in range(1,L+1):
-        knclassifier = KNeighborsClassifier(n_neighbors=l, warn_on_equidistant=False);
-        kn = knclassifier
-        knclassifier.fit(X_train, y_train);
-        y_est = knclassifier.predict(X_test);
-        errors[i,l-1] = np.sum(y_est[0]!=y_test[0])
-
-    i+=1
+    
+    nb_classifier = MultinomialNB(alpha=alpha, fit_prior=est_prior)
+    cls = nb_classifier
+    nb_classifier.fit(X_train, y_train)
+    y_est_prob = nb_classifier.predict_proba(X_test)
+    y_est = np.argmax(y_est_prob,1)
+    
+    errors[k] = np.sum(y_est.ravel()!=y_test.ravel(),dtype=float)/y_test.shape[0]
+    k+=1
     
 # Plot the classification error rate
+print('Error rate: {0}%'.format(100*mean(errors)))
+
+
 figure()
-plot(100*sum(errors,0)/N)
+plot(100*errors/N)
 xlabel('Number of neighbors')
 ylabel('Classification error rate (%)')
 show()
 
-print(kn)
+print(nb_classifier)
