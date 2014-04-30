@@ -11,48 +11,13 @@ class DataSet:
 	def X(self):
 		"""The Data matrix (N x M numpy.matrix)
 		The rows correspond to N data objects, each of which contains M attributes"""
+		# remove the class column from X if it is set
 		if self._class_column is None:
 			dataframe = self.df
 		else:
 			dataframe = self.df.drop(self._class_column, axis=1)
+
 		return dataframe.as_matrix()
-
-
-	def __init__( self, datafile=None, na_values=[], dataframe=None, string_columns=[], class_column=None ):
-		"""Creates the data set"""
-
-		# if filepath is given, read as csv
-		if datafile is not None:
-			self.df = pd.read_csv(datafile, na_values=na_values)
-		# else, if dataframe is given, use that
-		elif dataframe is not None:
-			self.df = dataframe
-
-		# convert string columns to indices
-		for c in string_columns:
-			if not c in self.df.columns:
-				warnings.warn("Column " + c + "given in string_columns, but does not exist in data")
-			else:
-				self.df[c] = self.df[c].apply( lambda x: np.nan if x is np.nan else self.df[c].tolist().index(x) )
-
-		self._class_column = class_column
-
-		# warnings
-		for c in string_columns:
-			if not c in self.df.columns:
-				warnings.warn("Column " + c + "given in string_columns, but does not exist in data")
-
-	def _copy(self, dataframe=None, class_column=None ):
-		"""Creates a new dataset from dataframe but with same internal attributes"""
-		if dataframe is None:
-			dataframe = self.df
-		if class_column is None:
-			class_column = self._class_column
-
-		return DataSet( dataframe=dataframe, class_column=class_column )
-
-
-
 
 	@property
 	def attributeNames(self):
@@ -104,7 +69,51 @@ class DataSet:
 
 
 
-	def classIn(self, class_column):
+
+
+
+
+
+	def __init__( self, datafile=None, na_values=[], dataframe=None, string_columns=[], class_column=None ):
+		"""Creates the data set"""
+
+		# if filepath is given, read as csv
+		if datafile is not None:
+			self.df = pd.read_csv(datafile, na_values=na_values)
+		# else, if dataframe is given, use that
+		elif dataframe is not None:
+			self.df = dataframe
+
+		# convert string columns to indices
+		for c in string_columns:
+			if not c in self.df.columns:
+				warnings.warn("Column " + c + "given in string_columns, but does not exist in data")
+			else:
+				self.df[c] = self.df[c].apply( lambda x: np.nan if x is np.nan else self.df[c].tolist().index(x) )
+
+		self._class_column = class_column
+
+
+
+	def _copy(self, dataframe=None, class_column=None ):
+		"""Creates a new dataset from dataframe but with same internal attributes"""
+		if dataframe is None:
+			dataframe = self.df
+		if class_column is None:
+			class_column = self._class_column
+
+		return DataSet( dataframe=dataframe, class_column=class_column )
+
+
+
+
+
+
+
+
+
+
+	def set_class_column(self, class_column):
 		return self._copy( class_column=class_column )
 
 
@@ -115,9 +124,15 @@ class DataSet:
 		return self._copy( dataframe=dataframe )
 
 	def take_columns(self, columns):
-		dataframe = self.df[columns]
+		dataframe = self.df.loc[:,columns]
 
 		return self._copy( dataframe=dataframe )
+
+	def take_rows(self, rows):
+		dataframe = self.df.loc[rows,:]
+
+		return self._copy( dataframe=dataframe )
+
 
 
 

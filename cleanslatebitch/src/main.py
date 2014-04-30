@@ -10,6 +10,7 @@ dataset = DataSet(
 )
 
 dataset = dataset.standardize()
+dataset = dataset.take_columns(['arsons'])
 
 print(dataset.df)
 
