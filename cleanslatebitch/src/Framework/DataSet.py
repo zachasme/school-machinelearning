@@ -118,7 +118,7 @@ class DataSet:
 
 	def standardize(self):
 		"""Scales (non-nominal) data to zero mean (sigma=0) and unit variance (std=1)"""
-		df_non_nominals = self.center().df / self._df_non_nominals.std()
+		df_non_nominals = self.center() / self._df_non_nominals.std()
 		df = pd.concat([self._df_nominals, df_non_nominals], axis=1)
 
 		return self._copy( dataframe=df )
