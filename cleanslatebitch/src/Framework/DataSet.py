@@ -129,7 +129,7 @@ class DataSet:
 		return self._copy( dataframe=dataframe )
 
 	def take_rows(self, rows):
-		dataframe = self.df.loc[rows,:]
+		dataframe = self.df.iloc[rows,:]
 
 		return self._copy( dataframe=dataframe )
 
@@ -182,11 +182,20 @@ class DataSet:
 		return dataframe._copy( dataframe=cols.join(dataframe.df) )
 
 
-	def binarize(self, column):
-		bins = pd.cut(self.df[column], 2, labels=False)
-		self.df[column] = bins
+	def binarize(self):
+		mask = self.df > self.df.median()
 
-		return bins
+		low = self._copy().df
+		low[mask]  = 1
+		low[~mask] = 0
+		low = low.rename(columns=lambda x: "Low" + str(x))
+
+		high = self._copy().df
+		high[mask]  = 0
+		high[~mask] = 1
+		high = high.rename(columns=lambda x: "High" + str(x))
+
+		return self._copy( dataframe=low.join(high) );
 
 	def __repr__(self):
 		return str(self.df)

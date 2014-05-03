@@ -20,7 +20,7 @@ K = 200
 xe = linspace(-10, 10, 100)
 
 # Find the k nearest neighbors
-knn = NearestNeighbors(n_neighbors=K, warn_on_equidistant=False).fit(X)
+knn = NearestNeighbors(n_neighbors=K).fit(X)
 D, i = knn.kneighbors(np.matrix(xe).T)
 
 # Compute the density

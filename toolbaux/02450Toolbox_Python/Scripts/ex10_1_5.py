@@ -1,4 +1,5 @@
 # exercise 10.1.5
+import numpy as np
 from pylab import *
 from scipy.io import loadmat
 from sklearn.mixture import GMM
@@ -13,6 +14,8 @@ classNames = [name[0][0] for name in mat_data['classNames']]
 N, M = X.shape
 C = len(classNames)
 
+print(X)
+X =  np.hstack   ([X, X])
 
 # Range of K's to try
 KRange = range(1,11)

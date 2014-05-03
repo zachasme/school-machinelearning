@@ -9,13 +9,12 @@ dataset = DataSet(
 	string_columns=['state','communityname'],
 )
 
-print(dataset.df)
+print(dataset.df.columns[83])
 
 #print(type("wat"))
 
 dataset = dataset.fix_missing(drop_objects=True)
 dataset = dataset.standardize()
-
 
 
 #dataset = dataset.normalize()

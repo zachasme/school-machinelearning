@@ -12,13 +12,13 @@ maxRule = 4
 
 # Run Apriori Algorithm
 print('Mining for frequent itemsets by the Apriori algorithm')
-status1 = call('apriori.exe -f"," -s{0} -v"[Sup. %0S]" {1} apriori_temp1.txt'.format(minSup, filename))
+status1 = call('apriori -f"," -s{0} -v"[Sup. %0S]" {1} apriori_temp1.txt'.format(minSup, filename))
 if status1!=0:
     print('An error occured while calling apriori, a likely cause is that minSup was set to high such that no frequent itemsets were generated or spaces are included in the path to the apriori files.')
     exit()
 if minConf>0:
     print('Mining for associations by the Apriori algorithm')
-    status2 = call('apriori.exe -tr -f"," -n{0} -c{1} -s{2} -v"[Conf. %0C,Sup. %0S]" {3} apriori_temp2.txt'.format(maxRule, minConf, minSup, filename))
+    status2 = call('apriori -tr -f"," -n{0} -c{1} -s{2} -v"[Conf. %0C,Sup. %0S]" {3} apriori_temp2.txt'.format(maxRule, minConf, minSup, filename))
     if status2!=0:
         print('An error occured while calling apriori')
         exit()

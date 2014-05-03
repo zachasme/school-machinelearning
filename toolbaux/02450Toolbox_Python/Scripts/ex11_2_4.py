@@ -15,7 +15,7 @@ for c_id, c_size in enumerate(c_sizes):
 K = 5
 
 # Find the k nearest neighbors
-knn = NearestNeighbors(n_neighbors=K, warn_on_equidistant=False).fit(X)
+knn = NearestNeighbors(n_neighbors=K).fit(X)
 D, i = knn.kneighbors(X)
 
 # Outlier score
