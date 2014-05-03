@@ -154,7 +154,7 @@ class DataSet:
 
 		return self._copy( nominals=nominals )
 
-	def binarize(self, column, bins=1):
+	def one_of_k(self, column, bins=1):
 		# creates binary attributes
 		cols = pd.crosstab(self.df.index, self.df[column])
 		# prepends column name to interval labels
@@ -167,6 +167,11 @@ class DataSet:
 		return dataframe._copy( dataframe=cols.join(dataframe.df) )
 
 
+	def binarize(self, column):
+		bins = pd.cut(self.df[column], 2, labels=False)
+		self.df[column] = bins
+
+		return bins
 
 	def __repr__(self):
 		return str(self.df)
