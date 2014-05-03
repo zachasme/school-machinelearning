@@ -7,7 +7,7 @@ from sklearn.mixture import GMM
 from sklearn import cross_validation
 from mpl_toolkits.mplot3d import Axes3D
 
-crime = DataSet(datafile='../data/normalized.csv', nominals=['state','communityname','countyCode','communityCode'])
+crime = DataSet(datafile='../data/normalized.csv', string_columns=['state','communityname','countyCode','communityCode'])
 
 #crime = crime.drop(['state', 'communityname']) 	  # Drop strings
 #crime = crime.drop(['countyCode','communityCode']) # Drop nominals
@@ -25,11 +25,11 @@ crime = DataSet(datafile='../data/normalized.csv', nominals=['state','communityn
 # 	'nonViolPerPop',
 # ])
 crime = crime.take_columns([
-	'racePctHisp', 'racePctWhite',# 'racepctblack',
-	'medIncome', 'NumStreet', 'NumUnderPov'#, 'NumImmig', 'NumInShelters',
-	#'PctEmploy'
+	'racePctHisp', 'racePctWhite', 'racepctblack', 'racePctAsian',
+	'medIncome', 'NumStreet', 'NumImmig',
+	'PctEmploy', "PctPopUnderPov", 'pctUrban'
 	])
-#crime = crime.fix_missing(fill_mean=True)
+crime = crime.fix_missing(fill_mean=True)
 #crime = crime.standardize()
 #crime = crime.normalize()
 #crime = crime.drop_nominals()
@@ -41,22 +41,22 @@ print(crime.attributeNames)
 
 # Variables of interest
 N, M = crime.N, crime.M
-print(M)
+#print(M)
 #C = len(crime.classNames)
 X = crime.X
 
-fig = plt.figure()
-ax = Axes3D(fig)
-ax.plot(X[0], X[1], X[2])
+# fig = plt.figure()
+# ax = Axes3D(fig)
+# ax.plot(X[0], X[1], X[2])
 
-plt.show()
+# plt.show()
 
 # Range of K's to try
 KRange = range(1,11)
 T = len(KRange)
 
 covar_type = 'full'     # you can try out 'diag' as well
-reps = 2                # number of fits with different initalizations, best result will be kept
+reps = 5                # number of fits with different initalizations, best result will be kept
 
 # Allocate variables
 BIC = np.zeros((T,1))
@@ -64,7 +64,7 @@ AIC = np.zeros((T,1))
 CVE = np.zeros((T,1))
 
 # K-fold crossvalidation
-CV = cross_validation.KFold(N,10,shuffle=True)
+CV = cross_validation.KFold(N,2,shuffle=True)
 
 for t,K in enumerate(KRange):
 	print('Fitting model for K={0}\n'.format(K))
@@ -73,6 +73,8 @@ for t,K in enumerate(KRange):
 	# Get BIC and AIC
 	BIC[t,0] = gmm.bic(X)
 	AIC[t,0] = gmm.aic(X)
+	cds = gmm.means_       # extract cluster centroids (means of gaussians)
+	#print(cds)
 	# For each crossvalidation fold
 	for train_index, test_index in CV:
 		# extract training and test set for current CV fold
@@ -82,8 +84,10 @@ for t,K in enumerate(KRange):
 		gmm = GMM(n_components=K, covariance_type=covar_type, n_init=reps, params='wmc').fit(X_train)
 		cls = gmm.predict(X)    # extract cluster labels
 		cds = gmm.means_       # extract cluster centroids (means of gaussians)
+		#print(cds)
 		covs = gmm.covars_      # extract cluster shapes (covariances of gaussians)
 		# compute negative log likelihood of X_test
+		print(gmm.score(X_test))
 		CVE[t] += - gmm.score(X_test).sum()
             
 
