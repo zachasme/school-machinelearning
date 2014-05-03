@@ -1,3 +1,5 @@
+import warnings
+
 import numpy as np
 import pandas as pd
 
@@ -5,42 +7,17 @@ import matplotlib.pyplot as plt
 
 
 class DataSet:
-	def __init__( self, datafile=None, dataframe=None, nominals=[], classColumn=None ):
-		"""Creates the data set"""
-
-		if datafile is not None:
-			self.df = pd.read_csv(datafile, na_values=['?'])
-		elif dataframe is not None:
-			self.df = dataframe
-
-		self._nominals = [nominal for nominal in nominals if nominal in self.df.columns]
-		self._classColumn = classColumn
-
-		self._df_nominals     = self.df[self._nominals]
-		self._df_non_nominals = self.df[self.df.columns - self._nominals]
-
-	def _copy(self, dataframe=None, nominals=None, classColumn=None ):
-		"""Creates a new dataset from dataframe but with same internal attributes"""
-		if dataframe is None:
-			dataframe = self.df
-		if nominals is None:
-			nominals = self._nominals
-		if classColumn is None:
-			classColumn = self._classColumn
-
-		return DataSet( dataframe=dataframe, nominals=nominals, classColumn=classColumn )
-
-
 	@property
 	def X(self):
-		"""Data matrix
-
-		type: numpy.matrix
-		size: N x M
-
+		"""The Data matrix (N x M numpy.matrix)
 		The rows correspond to N data objects, each of which contains M attributes"""
-		dataframe = self.drop_columns([self._classColumn])
-		return dataframe.df.values
+		# remove the class column from X if it is set
+		if self._class_column is None:
+			dataframe = self.df
+		else:
+			dataframe = self.df.drop(self._class_column, axis=1)
+
+		return dataframe.values
 
 	@property
 	def attributeNames(self):
@@ -78,58 +55,97 @@ class DataSet:
 		type: list
 		size: C x 1
 		"""
-		return self.df[self._classColumn].unique()
+		return self.df[self._class_column].unique()
 
 	@property
 	def y(self):
 		"""class index, a (Nx1) matrix.
 		   for each data object, y contains a class index,
 		   y in {0,1,...,C-1} where C is number of classes"""
-		return self.df[self._classColumn].apply(lambda x: np.nan if x is np.nan else self.classNames.tolist().index(x)).as_matrix()
+		if self._class_column is None:
+			raise Exception("DataSet: reading y property, but class-column not set")
+
+		return self.df[self._class_column].apply(lambda x: np.nan if x is np.nan else self.classNames.tolist().index(x)).as_matrix()
 
 
 
-	def classIn(self, classColumn):
-		return self._copy( classColumn=classColumn )
+
+
+
+
+
+	def __init__( self, datafile=None, na_values=[], dataframe=None, string_columns=[], class_column=None ):
+		"""Creates the data set"""
+
+		# if filepath is given, read as csv
+		if datafile is not None:
+			self.df = pd.read_csv(datafile, na_values=na_values)
+		# else, if dataframe is given, use that
+		elif dataframe is not None:
+			self.df = dataframe
+
+		# convert string columns to indices
+		for c in string_columns:
+			if not c in self.df.columns:
+				warnings.warn("Column " + c + "given in string_columns, but does not exist in data")
+			else:
+				self.df[c] = self.df[c].apply( lambda x: np.nan if x is np.nan else self.df[c].tolist().index(x) )
+
+		self._class_column = class_column
+
+
+
+	def _copy(self, dataframe=None, class_column=None ):
+		"""Creates a new dataset from dataframe but with same internal attributes"""
+		if dataframe is None:
+			dataframe = self.df
+		if class_column is None:
+			class_column = self._class_column
+
+		return DataSet( dataframe=dataframe, class_column=class_column )
+
+
+
+
+
+
+
+
+
+
+	def set_class_column(self, class_column):
+		return self._copy( class_column=class_column )
 
 
 
 	def drop_columns(self, columns):
 		dataframe = self.df.drop(columns, axis=1)
-		nominals  = [column for column in self._nominals if column not in columns]
-
-		return self._copy( dataframe=dataframe, nominals=nominals )
-
-	def take_columns(self, columns):
-		dataframe = self.df[columns]
 
 		return self._copy( dataframe=dataframe )
 
-	def drop_nominals(self):
-		return self.drop_columns(self._nominals)
+	def take_columns(self, columns):
+		dataframe = self.df.loc[:,columns]
+
+		return self._copy( dataframe=dataframe )
+
+	def take_rows(self, rows):
+		dataframe = self.df.loc[rows,:]
+
+		return self._copy( dataframe=dataframe )
+
 
 
 
 	def normalize(self):
 		"""Rescales (non-nominal) attributes to lie within interval [0,1]"""
-		df_non_nominals = ( self._df_non_nominals - self._df_non_nominals.min() ) / ( self._df_non_nominals.max() - self._df_non_nominals.min() )
-		df = pd.concat([self._df_nominals, df_non_nominals], axis=1)
-
-		return self._copy( dataframe=df )
+		dataframe = ( self.df - self.df.min() ) / ( self.df.max() - self.df.min() )
+		return self._copy( dataframe=dataframe )
 
 	def standardize(self):
 		"""Scales (non-nominal) data to zero mean (sigma=0) and unit variance (std=1)"""
-		df_non_nominals = self.center() / self._df_non_nominals.std()
-		df = pd.concat([self._df_nominals, df_non_nominals], axis=1)
+		dataframe = (self.df - self.df.mean()) / self.df.std()
 
-		return self._copy( dataframe=df )
-
-	def center(self):
-		"""Centers data to zero mean (sigma=0)"""
-		df_non_nominals = self._df_non_nominals - self._df_non_nominals.mean()
-		df = pd.concat([self._df_nominals, df_non_nominals], axis=1)
-
-		return self._copy( dataframe=df )
+		return self._copy( dataframe=dataframe )
 
 
 	def fix_missing(self, drop_objects=False, drop_attributes=False, fill_mean=False):
@@ -150,9 +166,8 @@ class DataSet:
 	def discretize(self, column, bins):
 		bins = pd.cut(self.df[column], bins)
 		self.df[column] = bins
-		nominals = self._nominals + [column]
 
-		return self._copy( nominals=nominals )
+		return self._copy( )
 
 	def one_of_k(self, column, bins=1):
 		# creates binary attributes
