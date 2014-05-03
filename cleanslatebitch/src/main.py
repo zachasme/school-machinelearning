@@ -9,9 +9,6 @@ dataset = DataSet(
 	string_columns=['state','communityname'],
 )
 
-dataset = dataset.standardize()
-dataset = dataset.take_columns(['arsons'])
-
 print(dataset.df)
 
 #print(type("wat"))

@@ -17,7 +17,7 @@ class DataSet:
 		else:
 			dataframe = self.df.drop(self._class_column, axis=1)
 
-		return dataframe.as_matrix()
+		return dataframe.values
 
 	@property
 	def attributeNames(self):
