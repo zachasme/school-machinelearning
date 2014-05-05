@@ -133,6 +133,11 @@ class DataSet:
 
 		return self._copy( dataframe=dataframe )
 
+	def drop_rows(self, rows):
+		dataframe = self.df.drop(self.df.index[rows], axis=0)
+
+		return self._copy( dataframe=dataframe )
+
 	def take_rows(self, rows):
 		dataframe = self.df.iloc[rows,:]
 
@@ -168,7 +173,7 @@ class DataSet:
 
 
 	def discretize(self, column, bins):
-		bins = pd.cut(self.df[column], bins)
+		bins = pd.qcut(self.df[column], bins)
 		self.df[column] = bins
 
 		return self._copy( )
