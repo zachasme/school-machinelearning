@@ -11,13 +11,7 @@ class DataSet:
 	def X(self):
 		"""The Data matrix (N x M numpy.matrix)
 		The rows correspond to N data objects, each of which contains M attributes"""
-		# remove the class column from X if it is set
-		if self._class_column is None:
-			dataframe = self.df
-		else:
-			dataframe = self.df.drop(self._class_column, axis=1)
-
-		return dataframe.values
+		return self.df.values
 
 	@property
 	def attributeNames(self):
@@ -55,17 +49,17 @@ class DataSet:
 		type: list
 		size: C x 1
 		"""
-		return self.df[self._class_column].unique()
+		return self._classes.unique()
 
 	@property
 	def y(self):
 		"""class index, a (Nx1) matrix.
 		   for each data object, y contains a class index,
 		   y in {0,1,...,C-1} where C is number of classes"""
-		if self._class_column is None:
+		if self._classes is None:
 			raise Exception("DataSet: reading y property, but class-column not set")
 
-		return self.df[self._class_column].apply(lambda x: np.nan if x is np.nan else self.classNames.tolist().index(x)).as_matrix()
+		return self._classes.apply(lambda x: np.nan if x is np.nan else self.classNames.tolist().index(x)).as_matrix()
 
 
 
@@ -74,7 +68,7 @@ class DataSet:
 
 
 
-	def __init__( self, datafile=None, na_values=[], dataframe=None, string_columns=[], class_column=None ):
+	def __init__( self, datafile=None, na_values=[], dataframe=None, string_columns=[], class_column=None, classes=None ):
 		"""Creates the data set"""
 
 		# if filepath is given, read as csv
@@ -82,27 +76,31 @@ class DataSet:
 			self.df = pd.read_csv(datafile, na_values=na_values)
 		# else, if dataframe is given, use that
 		elif dataframe is not None:
-			self.df = dataframe
+			self.df = dataframe.copy()
+
+		self._classes = classes
+		if class_column is not None:
+			self._classes = self.df[class_column].copy()
+			self.df = self.df.drop(class_column, axis=1)
 
 		# convert string columns to indices
 		for c in string_columns:
 			if not c in self.df.columns:
-				warnings.warn("Column " + c + "given in string_columns, but does not exist in data")
+				warnings.warn("Column " + c + " given in string_columns, but does not exist in data")
 			else:
 				self.df[c] = self.df[c].apply( lambda x: np.nan if x is np.nan else self.df[c].tolist().index(x) )
 
-		self._class_column = class_column
 
 
 
-	def _copy(self, dataframe=None, class_column=None ):
+	def _copy(self, dataframe=None, classes=None ):
 		"""Creates a new dataset from dataframe but with same internal attributes"""
 		if dataframe is None:
 			dataframe = self.df
-		if class_column is None:
-			class_column = self._class_column
+		if classes is None:
+			classes = self._classes
 
-		return DataSet( dataframe=dataframe, class_column=class_column )
+		return DataSet( dataframe=dataframe, classes=classes )
 
 
 
@@ -114,7 +112,10 @@ class DataSet:
 
 
 	def set_class_column(self, class_column):
-		return self._copy( class_column=class_column )
+		classes = self.df[class_column].copy()
+		dataframe = self.df.drop(class_column, axis=1)
+
+		return self._copy( dataframe=dataframe, classes=classes )
 
 
 
@@ -153,9 +154,9 @@ class DataSet:
 		if fill_mean:
 			df = self.df.fillna(self.df.mean())
 		elif drop_attributes:
-			df = self.df.dropna(axis=0)
-		elif drop_objects:
 			df = self.df.dropna(axis=1)
+		elif drop_objects:
+			df = self.df.dropna(axis=0)
 		else:
 			raise Exception("fixmissing takes drop_objects, drop_attributes or fill_mean")
 

@@ -10,22 +10,6 @@ dataset = DataSet(
 	string_columns=['state','communityname'],
 )
 
-dataset = dataset.drop_columns([
-    'state',
-    'communityname',
-	'fold',
-#	'murders', 'murdPerPop',
-#	'rapes', 'rapesPerPop',
-#	'robberies', 'robbbPerPop',
-#	'assaults', 'assaultPerPop',
-#	'burglaries', 'burglPerPop',
-#	'larcenies', 'larcPerPop',
-#	'autoTheft', 'autoTheftPerPop',
-#	'arsons', 'arsonsPerPop',
-#	'ViolentCrimesPerPop',
-#	'nonViolPerPop',
-])
-#dataset = dataset.standardize()
 dataset = dataset.take_columns([
     'racepctblack',
     'racePctWhite',
@@ -36,20 +20,22 @@ dataset = dataset.take_columns([
     'medIncome',
 
     #'PctImmigRecent',
-    'NumStreet',
+    #'NumStreet',
 
     'ViolentCrimesPerPop',
 ]);
-print(dataset.df['NumStreet'])
 dataset = dataset.fix_missing(drop_objects=True)
-
-
-#dataset = dataset.discretize('arsons', 2)
-
 dataset = dataset.binarize()
 
-print(dataset.X)
 
+
+minSup = 25
+minConf = 80
+maxRule = 5
+
+
+
+# BEGIN APRIORI
 filename = '../tmp/apriori.txt'
 
 
@@ -65,9 +51,6 @@ from subprocess import call
 import re
 import os
 
-minSup = 40
-minConf = 80
-maxRule = 6
 
 
 # Run Apriori Algorithm

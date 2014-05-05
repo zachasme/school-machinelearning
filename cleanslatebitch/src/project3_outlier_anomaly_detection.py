@@ -5,7 +5,7 @@ from Framework.DataSet import *
 from Tools import writeapriorifile
 
 dataset = DataSet(
-	datafile ='../data/raw.csv',
+	datafile ='../data/normalized.csv',
 	na_values=['?'],
 	string_columns=['state','communityname'],
 )
@@ -44,7 +44,7 @@ M = dataset.M
 N = dataset.N
 
 
-displayN = 20
+displayN = 50
 
 
 
@@ -85,10 +85,10 @@ density = density[i]
 print('Gauss Kernel: Lowest density: {0} for data object: {1}'.format(density[0,0],i[0]))
 
 
-# Plot density estimate of outlier score
+# Plot density estimate
 figure(1)
 bar(range(displayN),density[:displayN])
-title('Density estimate')
+title('Gaussian Kernel Density estimate')
 
 
 
@@ -114,7 +114,7 @@ density = density[i]
 print('K neigb density: Lowest density: {0} for data object: {1}'.format(density[0],i[0]))
 
 
-# Plot k-neighbor estimate of outlier score (distances)
+# Plot k-neighbor density estimate 
 figure(3)
 bar(range(displayN),density[:displayN])
 title('KNN density: Outlier score')
@@ -145,7 +145,7 @@ print('KNN avg rel: {0} for data object: {1}'.format(avg_rel_density[0],i_avg_re
 
 # Plot k-neighbor estimate of outlier score (distances)
 figure(5)
-bar(range(displayN),density[:displayN])
+bar(range(displayN),avg_rel_density[:displayN])
 title('KNN average relative density: Outlier score')
 
 
@@ -166,17 +166,18 @@ score = D[:,K-1]
 
 # Sort the scores
 i = score.argsort()
+i = i[::-1]
 score = score[i]
 
 
 # Display the index of the highest score data object
-print('5th nearest neighb: highest distance {0} for data object: {1}'.format(score[-1],i[-1]))
+print('5th nearest neighb: highest distance {0} for data object: {1}'.format(score[0],i[0]))
 
 
 # Plot k-neighbor estimate of outlier score (distances)
 figure(7)
-bar(range(displayN),density[:displayN])
-title('5th neighbor distance: Outlier score')
+bar(range(displayN),score[:displayN])
+title('5th neighbor distance')
 
 
 show()
