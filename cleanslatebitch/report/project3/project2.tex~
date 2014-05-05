@@ -1,0 +1,25 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+%\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{amsmath, amssymb}
+%\usepackage{listings}
+
+\begin{document}
+
+\author{Valentin Rosenberg, Zacharias Knudsen}
+\date{\today}
+
+\section{Clustering}
+
+\subsection{1}
+We will find clusters of a subset of our dataset, as the dataset is meant for regression, many attributes have litlle correlation. We want to examine if there are clusters in the
+\end{figure}
+
+
+
+
+\end{document}

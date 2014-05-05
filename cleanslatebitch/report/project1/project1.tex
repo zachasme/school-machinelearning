@@ -1,0 +1,51 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+%\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{amsmath, amssymb}
+%\usepackage{listings}
+\usepackage{float}
+\begin{document}
+
+\author{Valentin Rosenberg, Zacharias Dyna Knudsen}
+\date{\today}
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+The data combines socio-economic data from the 1990 US Census, law enforcement data from the 1990 US LEMAS (Law Enforcement Management And Administrative Statistics) survey, and crime data from the 1995 FBI UCR (Uniform Crime Reporting). The main problem of interest intended with the data is the prediction of crimes.
+The data was obtained from http://archive.ics.uci.edu/ml/\newline
+datasets/Communities+and+Crime+Unnormalized. We also looked at a normalized version of this dataset from http://archive.ics.uci.edu/ml/datasets/Co-\newline
+mmunities+and+Crime that has been normalized with a unsupervised, equal-interval binning method. The data has previously been used to predict violent crimes per population. 
+The primary machine learning task is regression, as the data is a collection of attributes that are thought to be related to the number of crimes. We would like to predict the autotheft attribute with a regression model using the data as training set. As a classification problem we could predict whether new data objects belong to a rich/poor community or a colored/white community. We would also like to find groups of communities that are similar to eachother based on socio-economic attributes. We could also detect communities with deviating from the normal of communities with anomaly detection. 
+\section{Detailed description of the data} 
+There was apparently a limitation to this dataset, which was that the LEMAS survey was of the police departments with at least 100 officers, plus a random sample of smaller departments, so many communities are missing values in police related attributes, as we can also see in the summary statistic in the appendix. There was also some controversy in some states concerning the counting of rapes. These resulted in missing values for rape, which resulted in incorrect values for per capita violent crime. These cities are not included in the dataset. Many of these omitted communities were from the midwestern USA. Our data consists of 147 attributes, most of which are discrete or continous ratios. For example there is a population attribute for each community, and a householdsize attribute which is the mean number of people per household in the community. There are also nominal attributes, one with the names of the community and the state's name. LemanGangUnitDeploy is a nominal discrete attribute where 0 means no gangunit deployed and 1 means there is a gangunit, and 0.5 means a part-time gang unit is deployed. 
+Many of the attributes have missing values which are represented by a questionmark in the dataset. These we will try to deal with in various ways. We will try to estimate the mean, delete the data objects and delete the attributes with the missing values.
+The statistical summary also shows that it seems pctblack and pctwhite have high correlation with crimes per population as well as the attributes concerning families with two parents.
+
+\section{Visualisation}
+\input{three.tex}
+\section{Conclusion}
+\input{four.tex}
+\section{Appendix}
+
+\begin{figure}
+\centering
+\includegraphics[h, width=1.3\textwidth]{sumstat1.pdf}
+\end{figure}
+\begin{figure}
+\centering
+\includegraphics[h, width=1.3\textwidth]{sumstat2.pdf}
+\end{figure}
+
+
+
+% Bibliography
+\newpage
+\bibliographystyle{plain}
+\bibliography{bachelorprojekt}
+\end{document}

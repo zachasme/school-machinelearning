@@ -23,38 +23,42 @@ crime = DataSet(datafile='../data/normalized.csv', string_columns=['state','comm
 # 	'nonViolPerPop',
 # ])
 crime = crime.take_columns([
-	'racePctHisp', 'racePctWhite',# 'racepctblack',
-	'medIncome', 'NumStreet', 'NumUnderPov'#, 'NumImmig', 'NumInShelters',
-	#'PctEmploy'
+	'racePctHisp', 
+	'racePctWhite',
+	#'racepctblack',
+	#'racePctAsian',
+	'medIncome', 'NumStreet', 'NumImmig',
+	'PctEmploy', "PctPopUnderPov", 'pctUrban'
 	])
 #crime = crime.fix_missing(fill_mean=True)
 #crime = crime.standardize()
 #crime = crime.normalize()
 #crime = crime.drop_nominals()
 #crime = crime.discretize('assaults', 3)
-crime = DataSet(dataframe=crime.df[:100])
+crime = DataSet(dataframe=crime.df[:200])
 #print(crime.df.assaults)
 print(crime.attributeNames)
 
-# Variables of interest
+# Variables of interestz
 N, M = crime.N, crime.M
 #C = len(crime.classNames)
 X = crime.X
 
 # Perform hierarchical/agglomerative clustering on data matrix
-Method = 'single'
+Method = 'complete'
 Metric = 'euclidean'
 
 Z = linkage(X, method=Method, metric=Metric)
 
 # Compute and display clusters by thresholding the dendrogram
-Maxclust = 4
+Maxclust = 3
 cls = fcluster(Z, criterion='maxclust', t=Maxclust)
-figure(1)
+print(cls)
+#figure(1)
 #clusterplot(X, cls.reshape(cls.shape[0],1), y=y)
 
 # Display dendrogram
-max_display_levels=6
+max_display_levels=8
 figure(2)
 dendrogram(Z, truncate_mode='level', p=max_display_levels)
 
