@@ -1,8 +1,6 @@
-import pylab as pl
-
-
 from Framework.DataSet import *
 from Tools import writeapriorifile
+import pylab as pl
 
 dataset = DataSet(
 	datafile ='../data/normalized.csv',
@@ -33,7 +31,7 @@ dataset = dataset.fix_missing(drop_objects=True)
 
 dataorig = dataset;
 
-dataset = dataset.take_rows(range(1000));
+dataset = dataset.take_rows(range(100));
 
 #dataset = dataset.discretize('arsons', 2)
 

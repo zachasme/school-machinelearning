@@ -80,8 +80,8 @@ class DataSet:
 
 		self._classes = classes
 		if class_column is not None:
-			self._classes = self.df[class_column].copy()
-			self.df = self.df.drop(class_column, axis=1)
+			self.df = self.set_class_column(class_column).df
+
 
 		# convert string columns to indices
 		for c in string_columns:
@@ -111,9 +111,13 @@ class DataSet:
 
 
 
-	def set_class_column(self, class_column):
+	def set_class_column(self, class_column, nodelete=False):
 		classes = self.df[class_column].copy()
-		dataframe = self.df.drop(class_column, axis=1)
+		
+		if nodelete:
+			dataframe = self.df
+		else:
+			dataframe = self.df.drop(class_column, axis=1)
 
 		return self._copy( dataframe=dataframe, classes=classes )
 
@@ -145,7 +149,6 @@ class DataSet:
 	def standardize(self):
 		"""Scales (non-nominal) data to zero mean (sigma=0) and unit variance (std=1)"""
 		dataframe = (self.df - self.df.mean()) / self.df.std()
-
 		return self._copy( dataframe=dataframe )
 
 
