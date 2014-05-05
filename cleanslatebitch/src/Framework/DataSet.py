@@ -138,8 +138,8 @@ class DataSet:
 
 		return self._copy( dataframe=dataframe )
 
-	def take_rows(self, rows):
-		dataframe = self.df.iloc[rows,:]
+	def take_first_n_rows(self, n):
+		dataframe = self.df.iloc[:n,:]
 
 		return self._copy( dataframe=dataframe )
 

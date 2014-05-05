@@ -36,7 +36,7 @@ crime = crime.standardize()
 #crime = crime.normalize()
 #crime = crime.drop_nominals()
 
-crime = crime.take_rows(range(200))
+crime = crime.take_first_n_rows(200)
 
 crime = crime.discretize('PctEmploy', 2)
 crime = crime.set_class_column('PctEmploy')
