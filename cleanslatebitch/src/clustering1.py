@@ -5,7 +5,7 @@ from scipy.io import loadmat
 from toolbox_02450 import clusterplot
 from scipy.cluster.hierarchy import linkage, fcluster, dendrogram
 
-crime = DataSet(datafile='../data/normalized.csv', string_columns=['state','communityname','countyCode','communityCode'])
+crime = DataSet(datafile='../data/normalized.csv')
 
 #crime = crime.drop(['state', 'communityname']) 	  # Drop strings
 #crime = crime.drop(['countyCode','communityCode']) # Drop nominals
@@ -53,7 +53,7 @@ Z = linkage(X, method=Method, metric=Metric)
 # Compute and display clusters by thresholding the dendrogram
 Maxclust = 3
 cls = fcluster(Z, criterion='maxclust', t=Maxclust)
-print(cls)
+print(cls - 1)
 #figure(1)
 #clusterplot(X, cls.reshape(cls.shape[0],1), y=y)
 

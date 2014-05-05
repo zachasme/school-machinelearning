@@ -41,6 +41,9 @@ crime = DataSet(dataframe=crime.df[:200])
 print(crime.attributeNames)
 #col = crime.one_of_k('pctUrban', 2)
 #print(col)
+#dataset = crime.discretize('pctUrban', 2)
+#dataset = crime.set_class_column('pctUrban')
+#print(dataset.y)
 
 # Variables of interest
 N, M = crime.N, crime.M

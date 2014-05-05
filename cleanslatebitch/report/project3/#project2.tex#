@@ -36,6 +36,8 @@ We will find clusters of a subset of our dataset, as the dataset is meant for re
  2 2 1 1 1 2 1 0 1 1 1 1 0 2 0]
 \end{verbatim}
 
+Each attribute is standardized 
+
 \begin{figure}[h]
 \centering
 \includegraphics[h, width=0.8\textwidth]{figure_1}
