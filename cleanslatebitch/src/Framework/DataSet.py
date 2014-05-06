@@ -59,7 +59,7 @@ class DataSet:
 		if self._classes is None:
 			raise Exception("DataSet: reading y property, but class-column not set")
 
-		return self._classes.apply(lambda x: np.nan if x is np.nan else self.classNames.tolist().index(x)).as_matrix()
+		return self._classes.apply(lambda x: np.nan if x is np.nan else self.classNames.tolist().index(x)).values
 
 
 
@@ -68,7 +68,7 @@ class DataSet:
 
 
 
-	def __init__( self, datafile=None, na_values=[], dataframe=None, string_columns=[], class_column=None, classes=None ):
+	def __init__( self, datafile=None, na_values=[], dataframe=None, string_columns=[], classes=None ):
 		"""Creates the data set"""
 
 		# if filepath is given, read as csv
@@ -79,9 +79,6 @@ class DataSet:
 			self.df = dataframe.copy()
 
 		self._classes = classes
-		if class_column is not None:
-			self.df = self.set_class_column(class_column).df
-
 
 		# convert string columns to indices
 		for c in string_columns:
