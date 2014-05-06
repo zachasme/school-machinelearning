@@ -125,6 +125,7 @@ Anomaly detection was performed, by ranking objects in terms of the Gaussian Ker
 In order to cope with missing values, we removed any objects containing such values. We also considered using the means or medians across each attribute as replacements for the missing values, but we figured that could hide potential anomalies (for example an object with extreme values in one attribute, but missing values for others which would be set to the mean or median). 
 
 \begin{table}[H]
+\centering
 \begin{tabular}{c | c c c c}
   object/method & Gaussian & KNN & KNN avg. rel. & 5th-nearest \\
   worst & 4 & 4 & 4 & 4 \\
@@ -138,6 +139,7 @@ In order to cope with missing values, we removed any objects containing such val
 The first iteration gave the results seen in table \ref{table_ite1}. All four ranking methods agreed that object 4 ("Bemidjicity") and 17 ("Glendalecity") were the most anomalous objects. However, there is some disagreement as to the third worst object. Looking at all the graphs over outlier scores except for that of the Gaussian Kernel density estimater, we can see that the two worst objects have significantly worse scores, compared to the relative changes between the remaining 8 worst objects.
 
 \begin{table}[H]
+\centering
 \begin{tabular}{c | c c c c}
   object/method
         & Gaussian
@@ -153,6 +155,7 @@ The first iteration gave the results seen in table \ref{table_ite1}. All four ra
 \end{table}
 
 \begin{table}[H]
+\centering
 \begin{tabular}{c | c c c c}
   object/method
         & Gaussian
