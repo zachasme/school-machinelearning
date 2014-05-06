@@ -5,14 +5,14 @@ import pylab as pl
 dataset = DataSet(
 	datafile ='../data/raw.csv',
 	na_values=['?'],
-	string_columns=['state','communityname'],
+	string_columns=['state'],
 )
+dataset = dataset.set_class_column('communityname')
 
 dataset = dataset.drop_columns([
-	'state',
 #   'communityname',
-	'countyCode',
-	'communityCode',
+#	'countyCode',
+##	'communityCode',
 #	'fold',
 #	'murders', 'murdPerPop',
 #	'rapes', 'rapesPerPop',
@@ -29,11 +29,13 @@ dataset = dataset.drop_columns([
 
 dataset = dataset.standardize();
 
-dataset = dataset.fix_missing(drop_objects=True)
+dataset = dataset.fix_missing(drop_attributes=True)
 
 
 
-for i in range(10):
+outer_n = 5
+inner_n = 3
+for outer_i in range(outer_n):
 	
 	
 	X = dataset.X
@@ -41,7 +43,7 @@ for i in range(10):
 	N = dataset.N
 	
 	
-	displayN = 50
+	displayN = 10
 	
 	
 	
@@ -80,7 +82,8 @@ for i in range(10):
 	
 	
 	# Display the index of the lowest density data object
-	print('Gauss Kernel: Lowest density: {0} for data object: {1}'.format(density[0,0],i[0]))
+	for inner_i in range(inner_n):
+		print('Gauss Kernel: {2}. lowest density: {0} for data object: {1}'.format(density[inner_i,0],i[inner_i],inner_i+1))
 	
 	candidate_gauss = i[0]
 
@@ -89,6 +92,9 @@ for i in range(10):
 	figure(1)
 	bar(range(displayN),density[:displayN])
 	title('Gaussian Kernel Density estimate')
+	ylabel('Density Estimate')
+	xlabel('Object index')
+	xticks(range(displayN), i[:displayN])
 	
 	
 	
@@ -111,14 +117,18 @@ for i in range(10):
 	
 	
 	# Display the index of the lowest density data object
-	print('K neigb density: Lowest density: {0} for data object: {1}'.format(density[0],i[0]))
+	for inner_i in range(inner_n):
+		print('K neigb density: {2}. lowest density: {0} for data object: {1}'.format(density[inner_i],i[inner_i],inner_i+1))
 
 	candidate_kn = i[0]	
 	
 	# Plot k-neighbor density estimate 
 	figure(3)
 	bar(range(displayN),density[:displayN])
-	title('KNN density: Outlier score')
+	title('K-Nearest Neighbours density estimate')
+	ylabel('Density Estimate')
+	xlabel('Object index')
+	xticks(range(displayN), i[:displayN])
 	
 	
 	
@@ -141,14 +151,19 @@ for i in range(10):
 	
 	
 	# Display the index of the lowest density data object
-	print('KNN avg rel: {0} for data object: {1}'.format(avg_rel_density[0],i_avg_rel[0]))
+	for inner_i in range(inner_n):
+		print('KNN avg rel: {2}. worst is {0} for data object: {1}'.format(avg_rel_density[inner_i],i_avg_rel[inner_i],inner_i+1))
 	
 	candidate_knavg = i_avg_rel[0]
 	
 	# Plot k-neighbor estimate of outlier score (distances)
 	figure(5)
 	bar(range(displayN),avg_rel_density[:displayN])
-	title('KNN average relative density: Outlier score')
+	title('KNN average relative density estimate')
+	ylabel('Density Estimate')
+	xlabel('Object index')
+	xticks(range(displayN), i_avg_rel[:displayN])
+	
 	
 	
 	
@@ -173,17 +188,22 @@ for i in range(10):
 	
 	
 	# Display the index of the highest score data object
-	print('5th nearest neighb: highest distance {0} for data object: {1}'.format(score[0],i[0]))
+	for inner_i in range(inner_n):
+		print('5th nearest neighb: {2}. highest distance {0} for data object: {1}'.format(score[inner_i],i[inner_i],inner_i+1))
 	
 	candidate_kdist = i[0]
 	
 	# Plot k-neighbor estimate of outlier score (distances)
 	figure(7)
 	bar(range(displayN),score[:displayN])
-	title('5th neighbor distance')
+	title('Kth nearest neighbor distance (K=5)')
+	ylabel('Density Estimate')
+	xlabel('Object index')
+	xticks(range(displayN), i[:displayN])
 	
 	
-	#show()
+	
+	show()
 	
 
 	if candidate_kdist == candidate_knavg and candidate_kdist == candidate_kn and candidate_kdist == candidate_gauss:

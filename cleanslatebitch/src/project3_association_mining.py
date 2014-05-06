@@ -10,28 +10,15 @@ dataset = DataSet(
 	string_columns=['state','communityname'],
 )
 
-dataset = dataset.take_columns([
-    'racepctblack',
-    'racePctWhite',
-    'racePctAsian',
-    'racePctHisp',
 
-    'PctPopUnderPov',
-    'medIncome',
-
-    #'PctImmigRecent',
-    #'NumStreet',
-
-    'ViolentCrimesPerPop',
-]);
 dataset = dataset.fix_missing(drop_objects=True)
 dataset = dataset.binarize()
 
 
 
-minSup = 25
-minConf = 80
-maxRule = 5
+minSup = 40 
+minConf = 90
+maxRule = 4
 
 
 
