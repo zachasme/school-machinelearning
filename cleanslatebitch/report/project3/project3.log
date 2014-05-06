@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.2.24)  6 MAY 2014 12:00
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.2.24)  6 MAY 2014 12:11
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -725,23 +725,13 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 ABD: EveryShipout initializing macros
-LaTeX Font Info:    Try loading font information for U+msa on input line 21.
-
-(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
-File: umsa.fd 2013/01/14 v3.01 AMS symbols A
-)
-LaTeX Font Info:    Try loading font information for U+msb on input line 21.
-
-(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
-File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
 <fig_pca_raw.png, id=4, 870.8535pt x 849.1725pt>
 File: fig_pca_raw.png Graphic file (type png)
  <use fig_pca_raw.png>
-Package pdftex.def Info: fig_pca_raw.png used on input line 30.
+Package pdftex.def Info: fig_pca_raw.png used on input line 26.
 (pdftex.def)             Requested size: 317.07614pt x 309.17442pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 39--47
+Underfull \hbox (badness 10000) in paragraph at lines 35--43
 
  []
 
@@ -755,15 +745,33 @@ See the xkeyval package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.52 ...graphics[h, width=0.8\textwidth]{figure_1}
+l.48 ...graphics[h, width=0.8\textwidth]{figure_1}
                                                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-<figure_1.png, id=16, 586.8324pt x 442.2924pt>
+<figure_1.png, id=14, 586.8324pt x 442.2924pt>
 File: figure_1.png Graphic file (type png)
  <use figure_1.png>
-Package pdftex.def Info: figure_1.png used on input line 52.
+Package pdftex.def Info: figure_1.png used on input line 48.
+(pdftex.def)             Requested size: 362.37569pt x 273.12514pt.
+
+
+! Package xkeyval Error: `h' undefined in families `Gin'.
+
+See the xkeyval package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.72 ...graphics[h, width=0.8\textwidth]{figure_3}
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+<figure_3.png, id=15, 586.8324pt x 442.2924pt>
+File: figure_3.png Graphic file (type png)
+ <use figure_3.png>
+Package pdftex.def Info: figure_3.png used on input line 72.
 (pdftex.def)             Requested size: 362.37569pt x 273.12514pt.
  [2 <./figure_1.png>]
 
@@ -773,33 +781,15 @@ See the xkeyval package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.76 ...graphics[h, width=0.8\textwidth]{figure_3}
+l.80 ...graphics[h, width=0.6\textwidth]{figure_4}
                                                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-<figure_3.png, id=22, 586.8324pt x 442.2924pt>
-File: figure_3.png Graphic file (type png)
- <use figure_3.png>
-Package pdftex.def Info: figure_3.png used on input line 76.
-(pdftex.def)             Requested size: 362.37569pt x 273.12514pt.
-
-
-! Package xkeyval Error: `h' undefined in families `Gin'.
-
-See the xkeyval package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.84 ...graphics[h, width=0.6\textwidth]{figure_4}
-                                                  
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-<figure_4.png, id=23, 442.2924pt x 442.2924pt>
+<figure_4.png, id=21, 442.2924pt x 442.2924pt>
 File: figure_4.png Graphic file (type png)
  <use figure_4.png>
-Package pdftex.def Info: figure_4.png used on input line 84.
+Package pdftex.def Info: figure_4.png used on input line 80.
 (pdftex.def)             Requested size: 271.7835pt x 271.78888pt.
  [3 <./figure_3.png>]
 
@@ -809,65 +799,73 @@ See the xkeyval package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.91 ...graphics[h, width=0.6\textwidth]{figure_5}
+l.87 ...graphics[h, width=0.6\textwidth]{figure_5}
                                                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-<figure_5.png, id=28, 442.2924pt x 442.2924pt>
+<figure_5.png, id=26, 442.2924pt x 442.2924pt>
 File: figure_5.png Graphic file (type png)
  <use figure_5.png>
-Package pdftex.def Info: figure_5.png used on input line 91.
+Package pdftex.def Info: figure_5.png used on input line 87.
 (pdftex.def)             Requested size: 271.7835pt x 271.78888pt.
- [4 <./figure_4.png> <./figure_5.png>] [5]
-<fig_anomaly_kde_gauss.png, id=37, 870.8535pt x 849.1725pt>
+ [4 <./figure_4.png> <./figure_5.png>]
+LaTeX Font Info:    Try loading font information for U+msa on input line 125.
+
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 125.
+
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+) [5]
+<fig_anomaly_kde_gauss.png, id=35, 870.8535pt x 849.1725pt>
 File: fig_anomaly_kde_gauss.png Graphic file (type png)
 
 <use fig_anomaly_kde_gauss.png>
-Package pdftex.def Info: fig_anomaly_kde_gauss.png used on input line 184.
+Package pdftex.def Info: fig_anomaly_kde_gauss.png used on input line 181.
 (pdftex.def)             Requested size: 203.83417pt x 198.75221pt.
 
-<fig_anomaly_knn_de.png, id=38, 870.8535pt x 849.1725pt>
+<fig_anomaly_knn_de.png, id=36, 870.8535pt x 849.1725pt>
 File: fig_anomaly_knn_de.png Graphic file (type png)
 
 <use fig_anomaly_knn_de.png>
-Package pdftex.def Info: fig_anomaly_knn_de.png used on input line 190.
+Package pdftex.def Info: fig_anomaly_knn_de.png used on input line 187.
 (pdftex.def)             Requested size: 203.83417pt x 198.75221pt.
 
-<fig_anomaly_knn_avgrel_de.png, id=39, 870.8535pt x 849.1725pt>
+<fig_anomaly_knn_avgrel_de.png, id=37, 870.8535pt x 849.1725pt>
 File: fig_anomaly_knn_avgrel_de.png Graphic file (type png)
 
 <use fig_anomaly_knn_avgrel_de.png>
-Package pdftex.def Info: fig_anomaly_knn_avgrel_de.png used on input line 203.
+Package pdftex.def Info: fig_anomaly_knn_avgrel_de.png used on input line 200.
 (pdftex.def)             Requested size: 183.4495pt x 178.87569pt.
 
-<fig_anomaly_knndist.png, id=40, 870.8535pt x 849.1725pt>
+<fig_anomaly_knndist.png, id=38, 870.8535pt x 849.1725pt>
 File: fig_anomaly_knndist.png Graphic file (type png)
 
 <use fig_anomaly_knndist.png>
-Package pdftex.def Info: fig_anomaly_knndist.png used on input line 209.
+Package pdftex.def Info: fig_anomaly_knndist.png used on input line 206.
 (pdftex.def)             Requested size: 183.4495pt x 178.87569pt.
  [6 <./fig_anomaly_kde_gauss.png> <./fig_anomaly_knn_de.png>] [7 <./fig_anomaly
 _knn_avgrel_de.png> <./fig_anomaly_knndist.png>]
 (./project3.aux) ) 
 Here is how much of TeX's memory you used:
- 11945 strings out of 494468
- 214939 string characters out of 6166395
+ 11918 strings out of 494468
+ 214655 string characters out of 6166395
  265314 words of memory out of 5000000
- 14893 multiletter control sequences out of 15000+600000
- 11709 words of font info for 46 fonts, out of 8000000 for 9000
+ 14875 multiletter control sequences out of 15000+600000
+ 7063 words of font info for 28 fonts, out of 8000000 for 9000
  350 hyphenation exceptions out of 8191
  63i,8n,57p,677b,349s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
 /cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10
-.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></
-usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/sha
-re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/tex
-live/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on project3.pdf (7 pages, 379931 bytes).
+.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb><
+/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on project3.pdf (7 pages, 359441 bytes).
 PDF statistics:
- 74 PDF objects out of 1000 (max. 8388607)
- 40 compressed objects within 1 object stream
+ 66 PDF objects out of 1000 (max. 8388607)
+ 34 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  58 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -18,10 +18,6 @@
 
 \begin{document}
 
-\maketitle
-
-
-
 \section{Dataset}
 Already during project 1 we noticed that the dataset could have some anomalous objects (by looking at for example a plot of the first two principal components, see figure \ref{fig_pca}). Interestingly, another version of the dataset was available, by Redmond\cite{redmond09}, which has been preprocessed in a number of ways; first each attribute has been normalized into a 0-1 interval, and then values more than 3 standard deviations above the mean are normalized to 1 while values more than 3 std. dev. below the mean are standardized to 0.
 
@@ -137,6 +133,7 @@ In order to cope with missing values, we removed any objects containing such val
 \end{table}
 
 The first iteration gave the results seen in table \ref{table_ite1}. All four ranking methods agreed that object 4 ("Bemidjicity") and 17 ("Glendalecity") were the most anomalous objects. However, there is some disagreement as to the third worst object. Looking at all the graphs over outlier scores except for that of the Gaussian Kernel density estimater, we can see that the two worst objects have significantly worse scores, compared to the relative changes between the remaining 8 worst objects.
+
 
 \begin{table}[H]
 \centering
