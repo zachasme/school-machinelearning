@@ -59,7 +59,7 @@ class DataSet:
 		if self._classes is None:
 			raise Exception("DataSet: reading y property, but class-column not set")
 
-		return self._classes.apply(lambda x: np.nan if x is np.nan else self.classNames.tolist().index(x)).as_matrix()
+		return self._classes.apply(lambda x: np.nan if x is np.nan else self.classNames.tolist().index(x)).values
 
 
 

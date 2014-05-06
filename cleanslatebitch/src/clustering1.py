@@ -45,7 +45,7 @@ N, M = crime.N, crime.M
 X = crime.X
 
 # Perform hierarchical/agglomerative clustering on data matrix
-Method = 'complete'
+Method = 'centroid'
 Metric = 'euclidean'
 
 Z = linkage(X, method=Method, metric=Metric)

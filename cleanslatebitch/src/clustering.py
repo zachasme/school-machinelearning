@@ -38,8 +38,8 @@ crime = crime.standardize()
 
 crime = crime.take_first_n_rows(200)
 
-crime = crime.discretize('PctEmploy', 2)
-crime = crime.set_class_column('PctEmploy')
+crime = crime.discretize('racePctWhite', 2)
+crime = crime.set_class_column('racePctWhite')
 #crime = DataSet(dataframe=crime.df[:200])
 #print(crime.df.assaults)
 print(crime.y)
