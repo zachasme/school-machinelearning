@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.2.24)  6 MAY 2014 11:35
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.2.24)  6 MAY 2014 12:00
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -824,28 +824,28 @@ Package pdftex.def Info: figure_5.png used on input line 91.
 File: fig_anomaly_kde_gauss.png Graphic file (type png)
 
 <use fig_anomaly_kde_gauss.png>
-Package pdftex.def Info: fig_anomaly_kde_gauss.png used on input line 181.
+Package pdftex.def Info: fig_anomaly_kde_gauss.png used on input line 184.
 (pdftex.def)             Requested size: 203.83417pt x 198.75221pt.
 
 <fig_anomaly_knn_de.png, id=38, 870.8535pt x 849.1725pt>
 File: fig_anomaly_knn_de.png Graphic file (type png)
 
 <use fig_anomaly_knn_de.png>
-Package pdftex.def Info: fig_anomaly_knn_de.png used on input line 187.
+Package pdftex.def Info: fig_anomaly_knn_de.png used on input line 190.
 (pdftex.def)             Requested size: 203.83417pt x 198.75221pt.
 
 <fig_anomaly_knn_avgrel_de.png, id=39, 870.8535pt x 849.1725pt>
 File: fig_anomaly_knn_avgrel_de.png Graphic file (type png)
 
 <use fig_anomaly_knn_avgrel_de.png>
-Package pdftex.def Info: fig_anomaly_knn_avgrel_de.png used on input line 200.
+Package pdftex.def Info: fig_anomaly_knn_avgrel_de.png used on input line 203.
 (pdftex.def)             Requested size: 183.4495pt x 178.87569pt.
 
 <fig_anomaly_knndist.png, id=40, 870.8535pt x 849.1725pt>
 File: fig_anomaly_knndist.png Graphic file (type png)
 
 <use fig_anomaly_knndist.png>
-Package pdftex.def Info: fig_anomaly_knndist.png used on input line 206.
+Package pdftex.def Info: fig_anomaly_knndist.png used on input line 209.
 (pdftex.def)             Requested size: 183.4495pt x 178.87569pt.
  [6 <./fig_anomaly_kde_gauss.png> <./fig_anomaly_knn_de.png>] [7 <./fig_anomaly
 _knn_avgrel_de.png> <./fig_anomaly_knndist.png>]
@@ -864,7 +864,7 @@ Here is how much of TeX's memory you used:
 usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/sha
 re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/tex
 live/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on project3.pdf (7 pages, 379927 bytes).
+Output written on project3.pdf (7 pages, 379931 bytes).
 PDF statistics:
  74 PDF objects out of 1000 (max. 8388607)
  40 compressed objects within 1 object stream
